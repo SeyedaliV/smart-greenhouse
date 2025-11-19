@@ -1,0 +1,89 @@
+import Device from '../models/deviceModel.js';
+
+export const getAllDevices = async (req, res) => {
+  try {
+    const devices = await Device.find();
+
+    res.status(200).json({
+      status: 'success',
+      results: devices.length,
+      data: {
+        devices
+      }
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: 'Error fetching devices',
+      error: error.message
+    });
+  }
+};
+
+export const controlDevice = async (req, res) => {
+  try {
+    const { deviceId } = req.params;
+    const { status } = req.body;
+
+    if (!['ON', 'OFF', 'AUTO'].includes(status)) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Invalid status. Use ON, OFF, or AUTO'
+      });
+    }
+
+    const device = await Device.findByIdAndUpdate(
+      deviceId,
+      {
+        status,
+        lastAction: new Date()
+      },
+      { new: true, runValidators: true }
+    );
+
+    if (!device) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'Device not found'
+      });
+    }
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        device
+      }
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: 'Error controlling device',
+      error: error.message
+    });
+  }
+};
+
+export const createDevice = async (req, res) => {
+  try {
+    const { name, type, powerConsumption } = req.body;
+
+    const device = await Device.create({
+      name,
+      type,
+      powerConsumption
+    });
+
+    res.status(201).json({
+      status: 'success',
+      data: {
+        device
+      }
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: 'Error creating device',
+      error: error.message
+    });
+  }
+};
