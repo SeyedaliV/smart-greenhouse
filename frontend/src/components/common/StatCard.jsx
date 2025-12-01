@@ -7,15 +7,15 @@ const StatCard = ({ title, value, subtitle, icon, color = 'green' }) => {
   };
 
   return (
-    <div className="bg-white rounded-xl border-gray-200 p-6 border">
+    <div className="bg-white dark:bg-zinc-800 rounded-xl border-zinc-200 dark:border-zinc-700 p-6 border">
       <div className="flex items-center">
         <div className={`${colorClasses[color]} p-3 rounded-lg`}>
           <span className="text-white text-xl">{icon}</span>
         </div>
         <div className="ml-4">
-          <h3 className="text-sm font-medium text-gray-600">{title}</h3>
-          <p className="text-2xl font-bold text-gray-900">{value}</p>
-          {subtitle && <p className="text-sm text-gray-500">{subtitle}</p>}
+          <h3 className="text-sm font-medium text-zinc-600 dark:text-gray-400">{title}</h3>
+          <p className="text-2xl font-bold text-zinc-900 dark:text-white">{value}</p>
+          {subtitle && <p className="text-sm text-zinc-500 dark:text-gray-500">{subtitle}</p>}
         </div>
       </div>
     </div>

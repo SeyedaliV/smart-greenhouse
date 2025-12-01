@@ -6,17 +6,28 @@ import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
 import Plants from './pages/Plants';
 import Devices from './pages/Devices';
+import Troubleshooting from './pages/Troubleshooting';
+import Logs from './pages/Logs';
 import ZoneDetail from './pages/zoneDetail';
 import Layout from './components/layout/Layout';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import Zones from './pages/Zones';
 import PlantDetail from './pages/PlantDetail';
+import { Toaster } from 'react-hot-toast';
 
 function App() {
   return (
     <AuthProvider>
       <Router>
         <div className="App">
+          <Toaster
+            position="top-right"
+            toastOptions={{
+              style: {
+                fontSize: '0.875rem',
+              },
+            }}
+          />
           <Routes>
             {/* Public Routes */}
             <Route path="/login" element={<Login />} />
@@ -71,15 +82,31 @@ function App() {
               </ProtectedRoute>
             } />
 
+            <Route path="/troubleshooting" element={
+              <ProtectedRoute>
+                <Layout>
+                  <Troubleshooting />
+                </Layout>
+              </ProtectedRoute>
+            } />
+
+            <Route path="/logs" element={
+              <ProtectedRoute>
+                <Layout>
+                  <Logs />
+                </Layout>
+              </ProtectedRoute>
+            } />
+
             {/* Redirect to dashboard by default */}
             <Route path="/" element={<Navigate to="/" replace />} />
             
             {/* 404 Page */}
             <Route path="*" element={
-              <div className="min-h-screen flex items-center justify-center bg-gray-50">
+              <div className="min-h-screen flex items-center justify-center bg-zinc-50">
                 <div className="text-center">
-                  <h1 className="text-4xl font-bold text-gray-900 mb-4">404</h1>
-                  <p className="text-gray-600 mb-4">Page not found</p>
+                  <h1 className="text-4xl font-bold text-zinc-900 mb-4">404</h1>
+                  <p className="text-zinc-600 mb-4">Page not found</p>
                   <a href="/" className="text-green-500 hover:text-green-600 font-medium">
                     ← Back to Dashboard
                   </a>

@@ -65,8 +65,8 @@ const Signup = () => {
           <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
             <span className="text-2xl text-white">🌱</span>
           </div>
-          <h1 className="text-2xl font-bold text-gray-800">Create Account</h1>
-          <p className="text-gray-600">Join Smart Greenhouse</p>
+          <h1 className="text-2xl font-bold text-zinc-800">Create Account</h1>
+          <p className="text-zinc-600">Join Smart Greenhouse</p>
         </div>
 
         {/* نمایش خطا */}
@@ -78,7 +78,7 @@ const Signup = () => {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-zinc-700 mb-2">
               Username
             </label>
             <input
@@ -86,14 +86,14 @@ const Signup = () => {
               name="username"
               value={formData.username}
               onChange={handleChange}
-              className="w-full px-3 text-zinc-800 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-3 text-zinc-800 py-2 border border-zinc-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
               placeholder="Choose a username"
               disabled={loading}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-zinc-700 mb-2">
               Password
             </label>
             <input
@@ -101,14 +101,14 @@ const Signup = () => {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              className="w-full px-3 text-zinc-800 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-3 text-zinc-800 py-2 border border-zinc-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
               placeholder="Create a password"
               disabled={loading}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-zinc-700 mb-2">
               Confirm Password
             </label>
             <input
@@ -116,7 +116,7 @@ const Signup = () => {
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleChange}
-              className="w-full px-3 text-zinc-800 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-3 text-zinc-800 py-2 border border-zinc-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
               placeholder="Confirm your password"
               disabled={loading}
             />

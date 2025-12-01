@@ -93,8 +93,8 @@ const Plants = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Plants Management</h1>
-          <p className="text-gray-600">Manage all plants in your greenhouse zones</p>
+          <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">Plants Management</h1>
+          <p className="text-zinc-600 dark:text-zinc-400">Manage all plants in your greenhouse zones</p>
         </div>
         <button
           onClick={() => setShowForm(true)}
@@ -105,14 +105,14 @@ const Plants = () => {
         </button>
       </div>
 
-      <div className="bg-white rounded-xl border border-gray-200 p-4">
+      <div className="bg-white dark:bg-zinc-800 rounded-xl border border-zinc-200 dark:border-zinc-700 p-4">
         <div className="flex items-center space-x-4">
-          <Filter size={20} className="text-gray-500" />
-          <span className="text-sm font-medium text-gray-700">Filter by Zone:</span>
+          <Filter size={20} className="text-zinc-500 dark:text-zinc-400" />
+          <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Filter by Zone:</span>
           <select 
             value={selectedZone}
             onChange={(e) => setSelectedZone(e.target.value)}
-            className="border text-zinc-700 border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="border text-zinc-700 dark:text-zinc-200 border-zinc-300 dark:border-zinc-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-zinc-700"
           >
             <option value="all">All Zones</option>
             {zones.map(zone => (
@@ -121,13 +121,13 @@ const Plants = () => {
               </option>
             ))}
           </select>
-          <span className="text-sm text-gray-500">
+          <span className="text-sm text-zinc-500 dark:text-zinc-400">
             Showing {filteredPlants.length} plants
           </span>
         </div>
       </div>
 
-      <div className="bg-white rounded-xl border border-gray-200">
+      <div className="bg-white dark:bg-zinc-800 rounded-xl border border-zinc-200 dark:border-zinc-700">
         <PlantTable
           plants={filteredPlants}
           onEdit={handleEdit}

@@ -28,7 +28,7 @@ export const calculateDaysUntilHarvest = (plant) => {
 // گرفتن وضعیت harvest
 export const getHarvestStatus = (daysUntilHarvest) => {
   if (daysUntilHarvest === 'N/A') {
-    return { text: 'N/A', color: 'text-gray-600', badgeColor: 'bg-gray-100 text-gray-800' };
+    return { text: 'N/A', color: 'text-zinc-600', badgeColor: 'bg-zinc-100 text-zinc-800' };
   }
   
   if (daysUntilHarvest === 0) {

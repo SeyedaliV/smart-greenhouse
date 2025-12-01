@@ -66,4 +66,12 @@ export const sensorsService = {
   getOne: (id) => api.get(`/sensors/${id}`),
 };
 
+export const logsService = {
+  getAll: (params) => api.get('/logs', { params }),
+};
+
+export const automationService = {
+  tick: () => api.post('/automation/tick'),
+};
+
 export default api;

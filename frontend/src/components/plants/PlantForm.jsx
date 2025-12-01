@@ -89,17 +89,17 @@ const PlantForm = ({ plant, onClose, onSave, zones }) => {
   const selectedPlantType = plantTypes.find(type => type.value === formData.type);
 
   return (
-    <div className="fixed h-screen inset-0 backdrop-brightness-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-xl shadow-xl w-full max-w-md">
-        <div className="p-6 border-b">
-          <h2 className="text-xl font-semibold text-gray-900">
+    <div className="fixed h-screen inset-0 backdrop-brightness-50 dark:backdrop-brightness-75 flex items-center justify-center p-4 z-50">
+      <div className="bg-white dark:bg-zinc-800 rounded-xl shadow-xl w-full max-w-md">
+        <div className="p-6 border-b border-zinc-200 dark:border-zinc-700">
+          <h2 className="text-xl font-semibold text-zinc-900 dark:text-white">
             {plant ? 'Edit Plant' : 'Add New Plant'}
           </h2>
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
               Plant Name
             </label>
             <input
@@ -107,21 +107,21 @@ const PlantForm = ({ plant, onClose, onSave, zones }) => {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className="w-full text-zinc-700 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full text-zinc-700 dark:text-zinc-200 px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-zinc-700"
               placeholder="Enter plant name"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
               Plant Type
             </label>
             <select
               name="type"
               value={formData.type}
               onChange={handleChange}
-              className="w-full text-zinc-700 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full text-zinc-700 dark:text-zinc-200 px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-zinc-700"
             >
               {plantTypes.map(type => (
                 <option key={type.value} value={type.value}>
@@ -132,7 +132,7 @@ const PlantForm = ({ plant, onClose, onSave, zones }) => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2">
               Planting Date
             </label>
             <input
@@ -140,15 +140,15 @@ const PlantForm = ({ plant, onClose, onSave, zones }) => {
               name="plantingDate"
               value={formData.plantingDate}
               onChange={handleChange}
-              className="w-full text-zinc-700 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full text-zinc-700 dark:text-zinc-200 px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-zinc-700"
               required
             />
           </div>
 
           {selectedPlantType && (
-            <div className="bg-blue-50 p-4 rounded-lg">
-              <h4 className="font-medium text-blue-900 mb-2">Plant Information</h4>
-              <div className="text-sm text-blue-800 space-y-1">
+            <div className="bg-blue-50 dark:bg-blue-900 p-4 rounded-lg">
+              <h4 className="font-medium text-blue-900 dark:text-blue-200 mb-2">Plant Information</h4>
+              <div className="text-sm text-blue-800 dark:text-blue-300 space-y-1">
                 <div>• Days to harvest: {selectedPlantType.daysToMature} days</div>
                 <div>• Estimated harvest: {
                   new Date(new Date(formData.plantingDate).getTime() + selectedPlantType.daysToMature * 24 * 60 * 60 * 1000)
@@ -162,7 +162,7 @@ const PlantForm = ({ plant, onClose, onSave, zones }) => {
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 bg-zinc-100 hover:bg-zinc-200 rounded-lg text-gray-600 hover:text-gray-800 transition duration-200"
+              className="px-4 py-2 bg-zinc-100 dark:bg-zinc-700 hover:bg-zinc-200 dark:hover:bg-zinc-600 rounded-lg text-zinc-600 dark:text-zinc-300 hover:text-zinc-800 dark:hover:text-white transition duration-200"
             >
               Cancel
             </button>

@@ -19,7 +19,9 @@ const deviceSchema = new mongoose.Schema({
   zone: {
     type: String,
     enum: ['Zone A', 'Zone B', 'Zone C', 'Zone D'],
-    required: true
+    // در seeder اصلی همیشه تنظیم می‌شود،
+    // اما در بعضی APIها ممکن است ارسال نشود، پس اجباری نیست
+    required: false
   },
   powerConsumption: Number,
   lastAction: Date

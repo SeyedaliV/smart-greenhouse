@@ -1,4 +1,5 @@
 import Device from '../models/deviceModel.js';
+import { createAuditLog } from './auditLogController.js';
 
 export const getAllDevices = async (req, res) => {
   try {
@@ -48,6 +49,20 @@ export const controlDevice = async (req, res) => {
       });
     }
 
+    // Audit log for device control
+    await createAuditLog({
+      req,
+      actionType: 'DEVICE_CONTROL',
+      entityType: 'Device',
+      entityId: device._id.toString(),
+      entityName: device.name,
+      description: `Changed device status to ${status}`,
+      meta: {
+        status,
+        zone: device.zone,
+      },
+    });
+
     res.status(200).json({
       status: 'success',
       data: {
@@ -71,6 +86,19 @@ export const createDevice = async (req, res) => {
       name,
       type,
       powerConsumption
+    });
+
+    await createAuditLog({
+      req,
+      actionType: 'DEVICE_CONTROL',
+      entityType: 'Device',
+      entityId: device._id.toString(),
+      entityName: device.name,
+      description: 'Created device',
+      meta: {
+        type: device.type,
+        powerConsumption: device.powerConsumption,
+      },
     });
 
     res.status(201).json({

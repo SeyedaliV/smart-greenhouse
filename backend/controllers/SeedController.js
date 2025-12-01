@@ -2,8 +2,9 @@ import Zone from '../models/zoneModel.js';
 import Plant from '../models/plantModel.js';
 import Device from '../models/deviceModel.js';
 import Sensor from '../models/sensorModel.js';
+import { createAuditLog } from './auditLogController.js';
 
-export const Seed = async (_, res) => {
+export const Seed = async (req, res) => {
   try {
     console.log('Cleaning all existing data...');
     
@@ -241,6 +242,21 @@ export const Seed = async (_, res) => {
     }
 
     console.log('Seed completed!');
+
+    await createAuditLog({
+      req,
+      actionType: 'SEED_RUN',
+      entityType: 'System',
+      entityId: 'seed',
+      entityName: 'Greenhouse Seeder',
+      description: 'Recreated demo greenhouse data (zones, plants, devices, sensors)',
+      meta: {
+        zones: zones.length,
+        plants: plants.length,
+        devices: devices.length,
+        sensors: sensors.length,
+      },
+    });
 
     res.json({
       message: 'Complete greenhouse system created successfully with clean data!',

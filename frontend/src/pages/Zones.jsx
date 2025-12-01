@@ -30,13 +30,13 @@ const Zones = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-start">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Greenhouse Zones</h1>
-          <p className="text-gray-600">Manage and monitor all zones</p>
+          <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">Greenhouse Zones</h1>
+          <p className="text-zinc-600 dark:text-gray-400">Manage and monitor all zones</p>
         </div>
-        <div className="text-sm text-gray-500">
-          {zones.length} zones total
+        <div className="text flex justify-center h-8 border border-blue-100 dark:border-blue-900 px-4 items-center rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400">
+          {zones.length} Zones total
         </div>
       </div>
 

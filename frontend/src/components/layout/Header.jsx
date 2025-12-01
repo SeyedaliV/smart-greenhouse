@@ -15,30 +15,25 @@ export default function Header() {
   };
 
   return (
-    <div className="w-full h-16 bg-white p-4 flex justify-between items-center border-b border-gray-200 top-0 z-30">
-      
+    <div className="w-full h-16 bg-white dark:bg-zinc-800 px-6 py-4 flex justify-between items-center border-b border-zinc-200 dark:border-zinc-700 z-30">
+  
       {/* Title */}
-      <h1 className="text-2xl text-zinc-700 font-bold flex items-center gap-2">
-        <Flower size={28} className="text-emerald-700" /> Smart Greenhouse Dashboard
+      <h1 className="text-2xl text-zinc-700 dark:text-white font-bold flex items-center">
+        <Flower size={28} className="text-emerald-700 dark:text-emerald-500 mr-2" /> Smart Greenhouse Dashboard
       </h1>
 
       {/* Right section */}
-      <div className="flex items-center gap-6">
+      <div className="flex items-center gap-4">
 
         {/* Live clock */}
-        <div className="text-sm text-gray-600">
+        <div className="text-sm text-zinc-600 dark:text-zinc-300">
           {time.toLocaleDateString()} — {time.toLocaleTimeString()}
-        </div>
-
-        {/* System status */}
-        <div className="bg-green-100 border-green-200 border text-green-800 px-3 py-1 rounded-full text-sm font-semibold">
-          Everything Normal
         </div>
 
         {/* Refresh button */}
         <button 
           onClick={handleRefresh}
-          className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded-lg text-sm transition duration-200"
+          className="bg-zinc-100 dark:bg-zinc-700 hover:bg-zinc-200 dark:hover:bg-zinc-600 text-zinc-700 dark:text-zinc-300 px-3 py-1 rounded-lg text-sm transition duration-200"
         >
           Refresh ↻
         </button>

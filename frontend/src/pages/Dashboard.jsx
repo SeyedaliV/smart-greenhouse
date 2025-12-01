@@ -3,12 +3,15 @@ import StatCard from '../components/common/StatCard';
 import EnvironmentCard from '../components/common/EnvironmentCard';
 import PlantStatusCard from '../components/plants/PlantStatusCard';
 import AlertBanner from '../components/common/AlertBanner';
-import { dashboardService } from '../services/api';
+import AlertsCard from '../components/dashboard/AlertsCard';
+import { dashboardService, automationService } from '../services/api';
 import { Leaf, Cog, TriangleAlert, Smile } from 'lucide-react';
 import Loading from '../components/common/Loading';
+import { toast } from 'react-hot-toast';
 
 const Dashboard = () => {
   const [dashboardData, setDashboardData] = useState(null);
+  const [alerts, setAlerts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -16,19 +19,41 @@ const Dashboard = () => {
     fetchDashboardData();
   }, []);
 
-  const getAverageSoilMoisture = (plants) => {
-    if (!plants || plants.length === 0) return 0;
-    const total = plants.reduce((sum, plant) => sum + (plant.currentStats?.soilMoisture || 0), 0);
-    return Math.round(total / plants.length);
-  };
+  useEffect(() => {
+    // Simple automation tick every 10 seconds
+    const intervalId = setInterval(async () => {
+      try {
+        const data = await automationService.tick();
+        const events = data?.data?.events || [];
+
+        events.forEach((event) => {
+          const title = `AUTO: ${event.deviceName} → ${event.newStatus}`;
+          const zoneText = event.zone ? ` in ${event.zone}` : '';
+          const metricText = event.metric && event.metricValue
+            ? ` (${event.metric}: ${event.metricValue}, target ${event.targetRange})`
+            : '';
+
+          toast.success(`${title}${zoneText}${metricText}`, {
+            icon: '🤖',
+          });
+        });
+      } catch (err) {
+        // For now, ignore automation errors in UI to avoid noise
+        console.error('Automation tick error:', err);
+      }
+    }, 10000);
+
+    return () => clearInterval(intervalId);
+  }, []);
 
   const fetchDashboardData = async () => {
     try {
       const data = await dashboardService.getDashboard();
-      console.log('Dashboard API Response:', data); // برای دیباگ
+      console.log('Dashboard API Response:', data);
       
       if (data && data.data) {
         setDashboardData(data.data);
+        setAlerts(data.data.alerts || []);
       } else {
         throw new Error('Invalid data format from server');
       }
@@ -38,6 +63,16 @@ const Dashboard = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleResolveAlert = (index) => {
+    setAlerts((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const handleAcknowledgeAlert = (index) => {
+    // برای سادگی فعلاً مانند resolve عمل می‌کند،
+    // اما می‌توان آن را برای آینده گسترش داد (مثل بازگشت بعد از رفرش).
+    setAlerts((prev) => prev.filter((_, i) => i !== index));
   };
 
   // حالت لودینگ
@@ -53,10 +88,10 @@ const Dashboard = () => {
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <div className="text-red-500 text-6xl mb-4">⚠️</div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">{error}</h3>
+          <h3 className="text-lg font-medium text-zinc-900 dark:text-zinc-100 mb-2">{error}</h3>
           <button 
             onClick={fetchDashboardData}
-            className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"
+            className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700"
           >
             Retry
           </button>
@@ -69,9 +104,9 @@ const Dashboard = () => {
   if (!dashboardData || !dashboardData.overview) {
     return (
       <div className="text-center py-12">
-        <div className="text-gray-400 text-6xl mb-4">🌱</div>
-        <h3 className="text-lg font-medium text-gray-900 mb-2">No data available</h3>
-        <p className="text-gray-500">Please make sure the backend is running and has data.</p>
+        <div className="text-zinc-400 text-6xl mb-4">🌱</div>
+        <h3 className="text-lg font-medium text-zinc-900 dark:text-zinc-100 mb-2">No data available</h3>
+        <p className="text-zinc-500 dark:text-zinc-400">Please make sure the backend is running and has data.</p>
       </div>
     );
   }
@@ -84,10 +119,10 @@ const Dashboard = () => {
       {/* هدر صفحه */}
       <div className="flex justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-          <p className="text-gray-600">Overview of your smart greenhouse</p>
+          <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">Dashboard</h1>
+          <p className="text-zinc-600 dark:text-zinc-400">Overview of your smart greenhouse</p>
         </div>
-        <div className="text-sm text-gray-500">
+        <div className="text-sm text-zinc-500 dark:text-zinc-500">
           Last updated: {new Date().toLocaleTimeString()}
         </div>
       </div>
@@ -124,15 +159,26 @@ const Dashboard = () => {
       </div>
 
       {/* هشدارها */}
-      <AlertBanner plants={plants} />
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2">
+          <AlertBanner plants={plants} />
+        </div>
+        <div>
+          <AlertsCard 
+            alerts={alerts} 
+            onResolve={handleResolveAlert}
+            onAcknowledge={handleAcknowledgeAlert}
+          />
+        </div>
+      </div>
 
       {/* وضعیت محیط */}
       
 
-      <div className="bg-white rounded-xl border border-gray-200">
-        <div className="px-6 py-3 border-b border-gray-200">
-          <h2 className="text-xl font-semibold text-gray-900">Average sensors status</h2>
-          <p className="text-gray-600">Current condition of all sensors</p>
+      <div className="bg-white dark:bg-zinc-800/30 rounded-xl border border-zinc-200 dark:border-zinc-700">
+        <div className="px-6 py-3 border-b border-zinc-200 dark:border-zinc-700">
+          <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">Average sensors status</h2>
+          <p className="text-zinc-600 dark:text-zinc-400">Current condition of all sensors</p>
         </div>
         <div className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -156,7 +202,7 @@ const Dashboard = () => {
             />
             <EnvironmentCard
               type="soilMoisture"
-              value={getAverageSoilMoisture(plants)}
+              value={environment?.soilMoisture || 0}
               unit="%"
               status="normal"
             />
@@ -166,10 +212,10 @@ const Dashboard = () => {
       
 
       {/* وضعیت گیاهان */}
-      <div className="bg-white rounded-xl border border-gray-200">
-        <div className="px-6 py-3 border-b border-gray-200">
-          <h2 className="text-xl font-semibold text-gray-900">Plant Status</h2>
-          <p className="text-gray-600">Current condition of all plants</p>
+      <div className="bg-white dark:bg-zinc-800/30 rounded-xl border border-zinc-200 dark:border-zinc-700">
+        <div className="px-6 py-3 border-b border-zinc-200 dark:border-zinc-700">
+          <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">Plant Status</h2>
+          <p className="text-zinc-600 dark:text-zinc-400">Current condition of all plants</p>
         </div>
         <div className="p-6">
           {plants.length > 0 ? (
@@ -180,8 +226,8 @@ const Dashboard = () => {
             </div>
           ) : (
             <div className="text-center py-8">
-              <div className="text-gray-400 text-4xl mb-2">🌱</div>
-              <p className="text-gray-500">No plants found</p>
+              <div className="text-zinc-400 text-4xl mb-2">🌱</div>
+              <p className="text-zinc-500 dark:text-zinc-400">No plants found</p>
             </div>
           )}
         </div>

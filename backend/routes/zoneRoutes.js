@@ -1,17 +1,23 @@
 import express from 'express';
 import { Seed } from '../controllers/SeedController.js';
-import { 
-  getZones, 
-  createZone, 
-  getZonePlants, 
-  getZoneById, 
+import {
+  getZones,
+  createZone,
+  getZonePlants,
+  getZoneById,
 } from '../controllers/zoneController.js';
 
 const router = express.Router();
 
 router.get('/', getZones);
 router.post('/', createZone);
+
+// seeder اصلی که در بک‌اند استفاده می‌شود
 router.post('/seed', Seed);
+
+// برای سازگاری با فرانت‌اند که از مسیر `/zones/complete-seed` استفاده می‌کند
+router.post('/complete-seed', Seed);
+
 router.get('/:id', getZoneById);
 router.get('/:id/plants', getZonePlants);
 

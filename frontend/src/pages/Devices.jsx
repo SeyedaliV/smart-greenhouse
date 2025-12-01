@@ -66,57 +66,57 @@ const Devices = () => {
 
   return (
     <div className="space-y-6">
-      {/* هدر صفحه */}
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Devices Control</h1>
-          <p className="text-gray-600">Manage and control your greenhouse devices</p>
-        </div>
-        
-        <div className="flex items-center gap-4">
-          {/* فیلتر Zone */}
-          <select 
-            value={selectedZone}
-            onChange={(e) => setSelectedZone(e.target.value)}
-            className="px-3 text-zinc-700 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="All">All Zones</option>
-            <option value="Zone A">Zone A</option>
-            <option value="Zone B">Zone B</option>
-            <option value="Zone C">Zone C</option>
-            <option value="Zone D">Zone D</option>
-          </select>
-          
-          <div className="text-sm text-gray-500">
-            {filteredDevices.filter(d => d.status === 'ON').length} devices active
-          </div>
-        </div>
+    {/* هدر صفحه */}
+    <div className="flex justify-between items-center">
+      <div>
+        <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">Devices Control</h1>
+        <p className="text-zinc-600 dark:text-zinc-300">Manage and control your greenhouse devices</p>
       </div>
       
-
-      {/* آمار مصرف برق */}
-      <PowerConsumption devices={devices} />
-
-      {/* شبکه دستگاه‌ها */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
-        {filteredDevices.map((device, index) => (
-          <DeviceCard
-            key={device.id || device._id || `device-${index}`}
-            device={device}
-            onControl={handleDeviceControl}
-          />
-        ))}
-      </div>
-
-      {/* پیام خالی */}
-      {devices.length === 0 && (
-        <div className="text-center py-12 bg-white rounded-xl border">
-          <div className="text-gray-400 text-6xl mb-4">🔧</div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No devices configured</h3>
-          <p className="text-gray-500">Devices will appear here when added to the system</p>
+      <div className="flex items-center gap-4">
+        {/* فیلتر Zone */}
+        <select 
+          value={selectedZone}
+          onChange={(e) => setSelectedZone(e.target.value)}
+          className="px-3 text-zinc-700 dark:text-zinc-200 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-zinc-800"
+        >
+          <option value="All">All Zones</option>
+          <option value="Zone A">Zone A</option>
+          <option value="Zone B">Zone B</option>
+          <option value="Zone C">Zone C</option>
+          <option value="Zone D">Zone D</option>
+        </select>
+        
+        <div className="text-sm text-zinc-500 dark:text-zinc-400">
+          {filteredDevices.filter(d => d.status === 'ON').length} devices active
         </div>
-      )}
+      </div>
     </div>
+    
+
+    {/* آمار مصرف برق */}
+    <PowerConsumption devices={devices} />
+
+    {/* شبکه دستگاه‌ها */}
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+      {filteredDevices.map((device, index) => (
+        <DeviceCard
+          key={device.id || device._id || `device-${index}`}
+          device={device}
+          onControl={handleDeviceControl}
+        />
+      ))}
+    </div>
+
+    {/* پیام خالی */}
+    {devices.length === 0 && (
+      <div className="text-center py-12 bg-white dark:bg-zinc-800 rounded-xl border dark:border-zinc-700">
+        <div className="text-zinc-400 text-6xl mb-4">🔧</div>
+        <h3 className="text-lg font-medium text-zinc-900 dark:text-white mb-2">No devices configured</h3>
+        <p className="text-zinc-500 dark:text-zinc-400">Devices will appear here when added to the system</p>
+      </div>
+    )}
+  </div>
   );
 };
 

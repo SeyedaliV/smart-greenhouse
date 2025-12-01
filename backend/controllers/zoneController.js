@@ -3,11 +3,24 @@ import Plant from '../models/plantModel.js';
 // import Device from '../models/deviceModel.js';
 // import Sensor from '../models/sensorModel.js';
 
-// دریافت همه زون‌ها
+// دریافت همه زون‌ها به همراه تعداد دقیق گیاهان هر زون
 export const getZones = async (req, res) => {
   try {
-    const zones = await Zone.find();
-    res.json(zones);
+    // همه‌ی زون‌ها را بگیر
+    const zones = await Zone.find().lean();
+
+    // برای هر زون تعداد گیاهان را از کالکشن Plant حساب کن
+    const zonesWithCounts = await Promise.all(
+      zones.map(async (zone) => {
+        const plantCount = await Plant.countDocuments({ zone: zone._id });
+        return {
+          ...zone,
+          plantCount,
+        };
+      })
+    );
+
+    res.json(zonesWithCounts);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

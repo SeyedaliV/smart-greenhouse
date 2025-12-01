@@ -1,4 +1,5 @@
 import Plant from '../models/plantModel.js';
+import { createAuditLog } from './auditLogController.js';
 
 export const getAllPlants = async (req, res) => {
   try {
@@ -96,6 +97,22 @@ export const updatePlantStats = async (req, res) => {
       });
     }
 
+    await createAuditLog({
+      req,
+      actionType: 'PLANT_UPDATE',
+      entityType: 'Plant',
+      entityId: plant._id.toString(),
+      entityName: plant.name,
+      description: 'Updated plant current statistics',
+      meta: {
+        type: plant.type,
+        temperature,
+        humidity,
+        soilMoisture,
+        light,
+      },
+    });
+
     res.status(200).json({
       status: 'success',
       data: {
@@ -115,6 +132,19 @@ export const createPlant = async (req, res) => {
   try {
     const plant = new Plant(req.body);
     await plant.save();
+
+    await createAuditLog({
+      req,
+      actionType: 'PLANT_CREATE',
+      entityType: 'Plant',
+      entityId: plant._id.toString(),
+      entityName: plant.name,
+      description: 'Created new plant',
+      meta: {
+        type: plant.type,
+        zone: plant.zone,
+      },
+    });
     
     res.status(201).json({
       status: 'success',
@@ -145,6 +175,19 @@ export const updatePlant = async (req, res) => {
       });
     }
     
+    await createAuditLog({
+      req,
+      actionType: 'PLANT_UPDATE',
+      entityType: 'Plant',
+      entityId: plant._id.toString(),
+      entityName: plant.name,
+      description: 'Updated plant details',
+      meta: {
+        type: plant.type,
+        zone: plant.zone,
+      },
+    });
+
     res.json({
       status: 'success',
       data: {
@@ -170,6 +213,19 @@ export const deletePlant = async (req, res) => {
       });
     }
     
+    await createAuditLog({
+      req,
+      actionType: 'PLANT_DELETE',
+      entityType: 'Plant',
+      entityId: plant._id.toString(),
+      entityName: plant.name,
+      description: 'Deleted plant',
+      meta: {
+        type: plant.type,
+        zone: plant.zone,
+      },
+    });
+
     res.status(204).json({
       status: 'success',
       data: null
