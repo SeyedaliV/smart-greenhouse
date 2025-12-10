@@ -57,6 +57,42 @@ export const getPlant = async (req, res) => {
         message: 'Plant not found'
       });
     }
+    // ensure optimalConditions exist for older records
+    if (!plant.optimalConditions || !plant.optimalConditions.temperature) {
+      const conditions = {
+        tomato: { 
+          temperature: { min: 22, max: 28 }, 
+          humidity: { min: 50, max: 70 }, 
+          soilMoisture: { min: 40, max: 60 }, 
+          light: { min: 600, max: 1000 },
+          daysToMature: 70
+        },
+        cucumber: { 
+          temperature: { min: 20, max: 30 }, 
+          humidity: { min: 60, max: 80 }, 
+          soilMoisture: { min: 50, max: 70 }, 
+          light: { min: 500, max: 900 },
+          daysToMature: 55
+        },
+        lettuce: { 
+          temperature: { min: 15, max: 25 }, 
+          humidity: { min: 55, max: 75 }, 
+          soilMoisture: { min: 45, max: 65 }, 
+          light: { min: 400, max: 800 },
+          daysToMature: 45
+        },
+        bellpepper: { 
+          temperature: { min: 22, max: 32 }, 
+          humidity: { min: 50, max: 70 }, 
+          soilMoisture: { min: 40, max: 60 }, 
+          light: { min: 700, max: 1100 },
+          daysToMature: 75
+        }
+      };
+
+      plant.optimalConditions = conditions[plant.type] || conditions.tomato;
+      plant.daysToMature = plant.daysToMature || (conditions[plant.type] && conditions[plant.type].daysToMature);
+    }
     
     res.status(200).json({
       status: 'success',

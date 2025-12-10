@@ -3,7 +3,9 @@ const StatCard = ({ title, value, subtitle, icon, color = 'green' }) => {
     green: 'bg-green-500',
     blue: 'bg-blue-500', 
     yellow: 'bg-yellow-500',
-    red: 'bg-red-500'
+    purple: 'bg-purple-500',
+    indigo: 'bg-indigo-500',
+    emerald: 'bg-emerald-500'
   };
 
   return (

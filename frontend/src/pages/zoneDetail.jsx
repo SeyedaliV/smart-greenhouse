@@ -1,18 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { zonesService, devicesService, sensorsService } from '../services/api';
-import { MapPin, Thermometer, Droplets, Sprout, Sun, Power, Fan, Waves, Lightbulb, Flame } from 'lucide-react';
+import { MapPin, Thermometer, Droplets, Sprout, Sun, Power, Fan, Waves, Lightbulb, Flame, Trash2, Plus } from 'lucide-react';
 import { getPlantStatus } from '../utils/plantCalculations';
 import PlantStatusCard from '../components/plants/PlantStatusCard'
 import Loading from '../components/common/Loading';
 import GoBackBtn from '../components/common/GoBackBtn';
+import ZoneDeleteModal from '../components/zones/ZoneDeleteModal';
+import DeviceForm from '../components/devices/DeviceForm';
 
 const ZoneDetail = () => {
   const { zoneId } = useParams();
+  const navigate = useNavigate();
   const [zone, setZone] = useState(null);
   const [devices, setDevices] = useState([]);
   const [sensors, setSensors] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showDeviceForm, setShowDeviceForm] = useState(false);
 
   useEffect(() => {
     if (zoneId) {
@@ -33,17 +38,15 @@ const ZoneDetail = () => {
       
       if (devicesData?.data?.devices) {
         const zoneDevices = devicesData.data.devices.filter(device => 
-          device.zone === zoneData.name
+          device.zone?._id === zoneData._id || device.zone === zoneData._id
         );
         setDevices(zoneDevices);
       }
 
       if (sensorsData && Array.isArray(sensorsData)) {
-        const zoneNames = ['Zone A', 'Zone B', 'Zone C', 'Zone D'];
-        const currentZoneIndex = zoneNames.indexOf(zoneData.name);
-        const sensorsPerZone = 4;
-        const startIndex = currentZoneIndex * sensorsPerZone;
-        const zoneSensors = sensorsData.slice(startIndex, startIndex + sensorsPerZone);
+        const zoneSensors = sensorsData.filter(sensor => 
+          sensor.zone?._id === zoneData._id || sensor.zone === zoneData._id
+        );
         setSensors(zoneSensors);
       }
 
@@ -61,6 +64,31 @@ const ZoneDetail = () => {
     } catch (error) {
       console.error('Error controlling device:', error);
     }
+  };
+
+  const handleDeleteClick = () => {
+    setShowDeleteModal(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    try {
+      await zonesService.delete(zoneId);
+      navigate('/zones');
+    } catch (error) {
+      console.error('Error deleting zone:', error);
+      alert('Error deleting zone: ' + (error.response?.data?.message || error.message));
+    } finally {
+      setShowDeleteModal(false);
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteModal(false);
+  };
+
+  const handleDeviceFormClose = () => {
+    setShowDeviceForm(false);
+    fetchZoneDetail(); // Refresh data after adding device
   };
 
   const getDeviceIcon = (type) => {
@@ -114,11 +142,20 @@ const ZoneDetail = () => {
             </p>
           </div>
         </div>
-        <span className={`px-4 py-2 rounded-full text-sm font-medium border ${
-          zone.status === 'active' ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 border-green-200 dark:border-green-800' : 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800'
-        }`}>
-          {zone.status}
-        </span>
+        <div className="flex items-center space-x-3">
+          <span className={`px-4 py-2 rounded-full text-sm font-medium border ${
+            zone.status === 'active' ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 border-green-200 dark:border-green-800' : 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800'
+          }`}>
+            {zone.status}
+          </span>
+          <button
+            onClick={handleDeleteClick}
+            className="flex items-center space-x-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-200 font-medium"
+          >
+            <Trash2 size={16} />
+            <span>Delete Zone</span>
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -208,7 +245,16 @@ const ZoneDetail = () => {
           </div>
 
           <div className="bg-white dark:bg-zinc-800 rounded-xl border border-zinc-200 dark:border-zinc-700 p-6">
-            <h3 className="text-lg font-semibold text-zinc-900 dark:text-white mb-4">Device Control</h3>
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">Device Control</h3>
+              <button
+                onClick={() => setShowDeviceForm(true)}
+                className="flex items-center space-x-2 px-3 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-200 font-medium"
+              >
+                <Plus size={16} />
+                <span>Add Device</span>
+              </button>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {devices.map(device => (
                 <div key={device._id} className="flex items-center justify-between p-4 bg-zinc-50 dark:bg-zinc-700 rounded-lg">
@@ -270,6 +316,24 @@ const ZoneDetail = () => {
           </div>
         </div>
       </div>
+
+      {/* Delete Zone Modal */}
+      {showDeleteModal && (
+        <ZoneDeleteModal
+          zone={zone}
+          onClose={handleCancelDelete}
+          onConfirm={handleConfirmDelete}
+        />
+      )}
+
+      {/* Add Device Modal */}
+      {showDeviceForm && (
+        <DeviceForm
+          onClose={handleDeviceFormClose}
+          onSave={handleDeviceFormClose}
+          preSelectedZone={zone}
+        />
+      )}
     </div>
   );
 };

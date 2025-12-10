@@ -59,4 +59,36 @@ export const getAuditLogs = async (req, res) => {
   }
 };
 
+// Delete all audit logs
+export const deleteAllLogs = async (req, res) => {
+  try {
+    const result = await AuditLog.deleteMany({});
 
+    // Log this action
+    await createAuditLog({
+      req,
+      actionType: 'SYSTEM_MAINTENANCE',
+      entityType: 'AuditLog',
+      entityId: null,
+      entityName: 'All Logs',
+      description: `Deleted ${result.deletedCount} audit log entries`,
+      meta: {
+        deletedCount: result.deletedCount
+      },
+    });
+
+    res.status(200).json({
+      status: 'success',
+      message: `Successfully deleted ${result.deletedCount} logs`,
+      data: {
+        deletedCount: result.deletedCount
+      }
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: 'Error deleting audit logs',
+      error: error.message,
+    });
+  }
+};

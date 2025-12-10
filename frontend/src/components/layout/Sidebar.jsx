@@ -9,7 +9,8 @@ import {
   LayoutGrid,
   Cog,
   AlertOctagon,
-  Activity
+  Activity,
+  Power
 } from 'lucide-react';
 
 const Sidebar = () => {
@@ -26,7 +27,7 @@ const Sidebar = () => {
     { path: '/', icon: Home, label: 'Dashboard' },
     { path: '/zones', icon: LayoutGrid, label: 'Zones' },
     { path: '/plants', icon: Leaf, label: 'Plants' },
-    { path: '/devices', icon: Cog, label: 'Devices' },
+    { path: '/devices', icon: Power, label: 'Devices' },
     { path: '/troubleshooting', icon: AlertOctagon, label: 'Troubleshooting' },
     { path: '/logs', icon: Activity, label: 'Logs' },
   ];

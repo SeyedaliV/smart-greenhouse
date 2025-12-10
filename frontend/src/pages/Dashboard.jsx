@@ -2,10 +2,9 @@ import { useState, useEffect } from 'react';
 import StatCard from '../components/common/StatCard';
 import EnvironmentCard from '../components/common/EnvironmentCard';
 import PlantStatusCard from '../components/plants/PlantStatusCard';
-import AlertBanner from '../components/common/AlertBanner';
 import AlertsCard from '../components/dashboard/AlertsCard';
 import { dashboardService, automationService } from '../services/api';
-import { Leaf, Cog, TriangleAlert, Smile } from 'lucide-react';
+import { Leaf, TriangleAlert, Smile, Gauge, LayoutGrid, Power } from 'lucide-react';
 import Loading from '../components/common/Loading';
 import { toast } from 'react-hot-toast';
 
@@ -128,7 +127,7 @@ const Dashboard = () => {
       </div>
 
       {/* کارت‌های آمار کلی */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="flex gap-6">
         <StatCard
           title="Total Plants"
           value={overview.totalPlants || 0}
@@ -137,10 +136,24 @@ const Dashboard = () => {
         />
 
         <StatCard
-          title="Active Devices" 
+          title="Active Devices"
           value={overview.activeDevices || 0}
-          icon={<Cog size={28} className="text-white" />}
+          icon={<Power size={28} className="text-white" />}
           color="blue"
+        />
+
+        <StatCard
+          title="Total Zones"
+          value={overview.totalZones || 0}
+          icon={<LayoutGrid size={28} className="text-white" />}
+          color="purple"
+        />
+
+        <StatCard
+          title="Total Sensors"
+          value={overview.totalSensors || 0}
+          icon={<Gauge size={28} className="text-white" />}
+          color="indigo"
         />
 
         <StatCard
@@ -154,15 +167,15 @@ const Dashboard = () => {
           title="Optimal Plants"
           value={overview.optimalPlants || 0}
           icon={<Smile size={28} className="text-white" />}
-          color="green"
+          color="emerald"
         />
       </div>
 
       {/* هشدارها */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2">
+      <div className="gap-6">
+        {/* <div className="lg:col-span-2">
           <AlertBanner plants={plants} />
-        </div>
+        </div> */}
         <div>
           <AlertsCard 
             alerts={alerts} 

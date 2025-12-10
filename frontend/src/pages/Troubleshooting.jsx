@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { dashboardService, devicesService, zonesService, sensorsService, plantsService } from '../services/api';
 import Loading from '../components/common/Loading';
+import GoBackBtn from '../components/common/GoBackBtn';
 
 const getAlertIcon = (type) => {
   switch (type) {
@@ -189,13 +190,7 @@ const Troubleshooting = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <button
-            onClick={() => navigate('/')}
-            className="hidden md:inline-flex items-center px-3 py-2 rounded-lg border border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800 text-sm"
-          >
-            <ArrowLeft size={16} className="mr-1" />
-            Dashboard
-          </button>
+          <GoBackBtn />
           <div>
             <h1 className="text-2xl md:text-3xl font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
               <Wrench size={24} className="text-amber-500" />
@@ -425,12 +420,12 @@ const Troubleshooting = () => {
               )}
 
               {/* IoT control panel */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {/* Devices control */}
-                <div className="bg-white dark:bg-zinc-800/40 border border-zinc-200 dark:border-zinc-700 rounded-xl p-4">
+                <div className="bg-white h-auto dark:bg-zinc-800/40 border border-zinc-200 dark:border-zinc-700 rounded-xl p-4">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2">
-                      <Power size={18} className="text-green-500" />
+                      <Power size={18} className="text-blue-500" />
                       <h3 className="font-semibold text-sm text-zinc-900 dark:text-zinc-100">
                         Devices control
                       </h3>
@@ -457,7 +452,7 @@ const Troubleshooting = () => {
                             </p>
                             <p className="text-[11px] text-zinc-500">
                               Type: {device.type} · Zone:{' '}
-                              {device.zone || 'N/A'}
+                              {typeof device.zone === 'object' ? (device.zone?.name || device.zone?._id || 'N/A') : (device.zone || 'N/A')}
                             </p>
                           </div>
                           <div className="flex items-center gap-1.5">

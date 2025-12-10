@@ -39,10 +39,10 @@ const AlertsCard = ({ alerts, onResolve, onAcknowledge }) => {
 
   if (!alerts || alerts.length === 0) {
     return (
-      <div className="bg-white rounded-xl border border-zinc-200 p-6 shadow-sm">
+      <div className="bg-white w-full rounded-xl border border-zinc-200 p-6">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-green-600 rounded-lg flex items-center justify-center">
+            <div className="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center">
               <AlertCircle size={20} className="text-white" />
             </div>
             <div>
@@ -64,10 +64,10 @@ const AlertsCard = ({ alerts, onResolve, onAcknowledge }) => {
   }
 
   return (
-    <div className="bg-white rounded-xl border border-zinc-200 p-6 shadow-sm">
+    <div className="bg-white w-full h-60 overflow-y-auto rounded-xl border border-zinc-200 p-6">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg flex items-center justify-center">
+          <div className="w-10 h-10 bg-orange-600 rounded-lg flex items-center justify-center">
             <AlertTriangle size={20} className="text-white" />
           </div>
           <div>
@@ -89,7 +89,7 @@ const AlertsCard = ({ alerts, onResolve, onAcknowledge }) => {
             className={`p-4 rounded-lg border cursor-pointer hover:shadow-sm transition-shadow ${getAlertColor(alert.type)}`}
           >
             <div className="flex items-start space-x-3">
-              <div className="flex-shrink-0 mt-0.5">
+              <div className="shrink-0 mt-0.5">
                 {getAlertIcon(alert.type)}
               </div>
               
@@ -146,7 +146,7 @@ const AlertsCard = ({ alerts, onResolve, onAcknowledge }) => {
       </div>
 
       {alerts.length > 5 && (
-        <div className="mt-4 pt-4 border-t border-zinc-200">
+        <div className="mt-4 pt-4 sticky border-t border-zinc-200">
           <button className="flex items-center space-x-1 text-sm text-blue-600 hover:text-blue-800 font-medium">
             <span>View all {alerts.length} alerts</span>
             <ArrowRight size={16} />

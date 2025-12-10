@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import PlantTable from '../components/plants/PlantTable';
 import PlantForm from '../components/plants/PlantForm';
+import PlantDeleteModal from '../components/plants/PlantDeleteModal';
 import { plantsService, zonesService } from '../services/api';
 import { Filter } from 'lucide-react';
 import { getPlantStatus } from '../utils/plantCalculations';
@@ -13,6 +14,8 @@ const Plants = () => {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingPlant, setEditingPlant] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deletingPlant, setDeletingPlant] = useState(null);
 
   useEffect(() => {
     fetchData();
@@ -56,16 +59,29 @@ const Plants = () => {
     setShowForm(true);
   };
 
-  const handleDelete = async (plantId) => {
-    if (window.confirm('Are you sure you want to delete this plant?')) {
-      try {
-        await plantsService.delete(plantId);
-        await fetchData();
-      } catch (error) {
-        console.error('Error deleting plant:', error);
-        alert('Error deleting plant: ' + error.message);
-      }
+  const handleDelete = (plant) => {
+    setDeletingPlant(plant);
+    setShowDeleteModal(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!deletingPlant) return;
+
+    try {
+      await plantsService.delete(deletingPlant._id || deletingPlant.id);
+      await fetchData();
+    } catch (error) {
+      console.error('Error deleting plant:', error);
+      alert('Error deleting plant: ' + (error.response?.data?.message || error.message));
+    } finally {
+      setShowDeleteModal(false);
+      setDeletingPlant(null);
     }
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteModal(false);
+    setDeletingPlant(null);
   };
 
   const handleFormClose = () => {
@@ -142,6 +158,15 @@ const Plants = () => {
           onClose={handleFormClose}
           onSave={handleFormClose}
           zones={zones}
+        />
+      )}
+
+      {/* Delete Plant Modal */}
+      {showDeleteModal && (
+        <PlantDeleteModal
+          plant={deletingPlant}
+          onClose={handleCancelDelete}
+          onConfirm={handleConfirmDelete}
         />
       )}
     </div>

@@ -1,8 +1,8 @@
 import Sensor from '../models/sensorModel.js';
 
-export const getSensors = async (req, res) => {
+export const getAllSensors = async (req, res) => {
   try {
-    const sensors = await Sensor.find();
+    const sensors = await Sensor.find().populate('zone');
     res.json(sensors);
   } catch (error) {
     res.status(500).json({ message: error.message });

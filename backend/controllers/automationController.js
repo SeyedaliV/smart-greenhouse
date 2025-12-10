@@ -7,8 +7,8 @@ import { createAuditLog } from './auditLogController.js';
 export const runAutomationTick = async (req, res) => {
   try {
     const [devices, sensors, zones] = await Promise.all([
-      Device.find(),
-      Sensor.find(),
+      Device.find().populate('zone'),
+      Sensor.find().populate('zone'),
       Zone.find(),
     ]);
 

@@ -1,21 +1,37 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { plantsService } from '../services/api';
-import { Thermometer, Droplets, Sprout, Sun, Calendar, Clock, ArrowLeft } from 'lucide-react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import { plantsService, zonesService } from '../services/api';
+import { Thermometer, Droplets, Sprout, Sun, Calendar, Clock, ArrowLeft, Edit, Trash2 } from 'lucide-react';
 import { getPlantStatus } from '../utils/plantCalculations';
 import Loading from '../components/common/Loading';
 import GoBackBtn from '../components/common/GoBackBtn';
+import PlantForm from '../components/plants/PlantForm';
+import PlantDeleteModal from '../components/plants/PlantDeleteModal';
 
 const PlantDetail = () => {
   const { plantId } = useParams();
+  const navigate = useNavigate();
   const [plant, setPlant] = useState(null);
+  const [zones, setZones] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   useEffect(() => {
+    fetchZones();
     if (plantId) {
       fetchPlantDetail();
     }
   }, [plantId]);
+
+  const fetchZones = async () => {
+    try {
+      const zonesData = await zonesService.getAll();
+      setZones(zonesData);
+    } catch (error) {
+      console.error('Error fetching zones:', error);
+    }
+  };
 
   const fetchPlantDetail = async () => {
     try {
@@ -26,6 +42,35 @@ const PlantDetail = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleEdit = () => {
+    setShowEditModal(true);
+  };
+
+  const handleDelete = () => {
+    setShowDeleteModal(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    try {
+      await plantsService.delete(plantId);
+      navigate('/plants');
+    } catch (error) {
+      console.error('Error deleting plant:', error);
+      alert('Error deleting plant: ' + (error.response?.data?.message || error.message));
+    } finally {
+      setShowDeleteModal(false);
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteModal(false);
+  };
+
+  const handleEditClose = () => {
+    setShowEditModal(false);
+    fetchPlantDetail(); // Refresh data after edit
   };
 
   if (loading) {
@@ -59,13 +104,29 @@ const PlantDetail = () => {
             <p className="text-zinc-600 dark:text-gray-400 capitalize">{plant.type} • Plant Details</p>
           </div>
         </div>
-        <span className={`px-4 py-2 rounded-full text-sm font-medium border ${
-          plant.status === 'optimal' ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 border-green-200 dark:border-green-800' :
-          plant.status === 'needs_attention' ? 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800' :
-          'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 border-red-200 dark:border-red-800'
-        }`}>
-          {plant.status.replace('_', ' ')}
-        </span>
+        <div className="flex items-center space-x-3">
+          <span className={`px-4 py-2 rounded-full text-sm font-medium border ${
+            plant.status === 'optimal' ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 border-green-200 dark:border-green-800' :
+            plant.status === 'needs_attention' ? 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 border-yellow-200 dark:border-yellow-800' :
+            'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 border-red-200 dark:border-red-800'
+          }`}>
+            {plant.status.replace('_', ' ')}
+          </span>
+          <button
+            onClick={handleEdit}
+            className="flex items-center space-x-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-200 font-medium"
+          >
+            <Edit size={16} />
+            <span>Edit Plant</span>
+          </button>
+          <button
+            onClick={handleDelete}
+            className="flex items-center space-x-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-200 font-medium"
+          >
+            <Trash2 size={16} />
+            <span>Delete Plant</span>
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -231,6 +292,25 @@ const PlantDetail = () => {
           </div>
         </div>
       </div>
+
+      {/* Edit Plant Modal */}
+      {showEditModal && (
+        <PlantForm
+          plant={plant}
+          zones={zones}
+          onClose={handleEditClose}
+          onSave={handleEditClose}
+        />
+      )}
+
+      {/* Delete Plant Modal */}
+      {showDeleteModal && (
+        <PlantDeleteModal
+          plant={plant}
+          onClose={handleCancelDelete}
+          onConfirm={handleConfirmDelete}
+        />
+      )}
     </div>
   );
 };

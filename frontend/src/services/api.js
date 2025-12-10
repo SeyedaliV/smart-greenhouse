@@ -51,6 +51,7 @@ export const devicesService = {
   getAll: () => api.get('/devices'),
   control: (deviceId, action) => api.patch(`/devices/${deviceId}/control`, action),
   create: (deviceData) => api.post('/devices', deviceData),
+  delete: (deviceId) => api.delete(`/devices/${deviceId}`),
 };
 
 export const zonesService = {
@@ -58,6 +59,7 @@ export const zonesService = {
   getOne: (id) => api.get(`/zones/${id}`),
   getZonePlants: (id) => api.get(`/zones/${id}/plants`),
   create: (zoneData) => api.post('/zones', zoneData),
+  delete: (zoneId) => api.delete(`/zones/${zoneId}`),
   completeSeed: () => api.post('/zones/complete-seed'),
 };
 
@@ -68,6 +70,7 @@ export const sensorsService = {
 
 export const logsService = {
   getAll: (params) => api.get('/logs', { params }),
+  deleteAll: () => api.delete('/logs/all'),
 };
 
 export const automationService = {

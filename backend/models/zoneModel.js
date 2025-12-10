@@ -4,8 +4,11 @@ const zoneSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    unique: true,
-    enum: ['Zone A', 'Zone B', 'Zone C', 'Zone D']
+    unique: true
+  },
+  plantType: {
+    type: String,
+    required: true
   },
   description: String,
   plants: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Plant' }],

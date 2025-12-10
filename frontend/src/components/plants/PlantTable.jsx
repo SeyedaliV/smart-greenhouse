@@ -110,7 +110,7 @@ const PlantTable = ({ plants, onEdit, onDelete, showZone = false }) => {
                       Edit
                     </button>
                     <button
-                      onClick={() => onDelete(plantIdentifier)}
+                      onClick={() => onDelete(plant)}
                       className="text-red-600 dark:text-red-500 px-2 py-1 rounded-md bg-red-100 dark:bg-red-900/30 hover:text-red-900 dark:hover:text-red-300"
                     >
                       Delete

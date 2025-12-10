@@ -271,9 +271,9 @@ const generateDeviceAlerts = (devices) => {
 export const getDashboardData = async (req, res) => {
   try {
     const [plants, devices, sensors, zones] = await Promise.all([
-      Plant.find(),
-      Device.find(),
-      Sensor.find(),
+      Plant.find().populate('zone'),
+      Device.find().populate('zone'),
+      Sensor.find().populate('zone'),
       Zone.find(),
     ]);
 
@@ -352,6 +352,8 @@ export const getDashboardData = async (req, res) => {
         optimalPlants: plantViewModels.filter(
           (p) => p.status === 'optimal',
         ).length,
+        totalZones: zones.length,
+        totalSensors: sensorViewModels.length,
       },
       environment: {
         temperature: avg('temperature'),

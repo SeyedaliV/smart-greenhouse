@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { zonesService } from '../services/api';
 import ZoneCard from '../components/zones/ZoneCard';
+import ZoneForm from '../components/zones/ZoneForm';
 import Loading from '../components/common/Loading';
 
 const Zones = () => {
   const [zones, setZones] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
   useEffect(() => {
     fetchZones();
@@ -22,6 +24,11 @@ const Zones = () => {
     }
   };
 
+  const handleZoneCreated = (newZone) => {
+    setZones(prevZones => [...prevZones, newZone]);
+    setShowCreateModal(false);
+  };
+
   if (loading) {
     return (
       <Loading />
@@ -35,8 +42,16 @@ const Zones = () => {
           <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">Greenhouse Zones</h1>
           <p className="text-zinc-600 dark:text-gray-400">Manage and monitor all zones</p>
         </div>
-        <div className="text flex justify-center h-8 border border-blue-100 dark:border-blue-900 px-4 items-center rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400">
-          {zones.length} Zones total
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => setShowCreateModal(true)}
+            className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition duration-200 font-medium"
+          >
+            Create New Zone
+          </button>
+          <div className="text flex justify-center h-8 border border-blue-100 dark:border-blue-900 px-4 items-center rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400">
+            {zones.length} Zones total
+          </div>
         </div>
       </div>
 
@@ -45,6 +60,14 @@ const Zones = () => {
           <ZoneCard key={zone._id} zone={zone} />
         ))}
       </div>
+
+      {/* Create Zone Modal */}
+      {showCreateModal && (
+        <ZoneForm
+          onClose={() => setShowCreateModal(false)}
+          onSave={handleZoneCreated}
+        />
+      )}
     </div>
   );
 };

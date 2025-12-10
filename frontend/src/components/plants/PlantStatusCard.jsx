@@ -42,7 +42,7 @@ const PlantStatusCard = ({ plant }) => {
 
   return (
     <Link to={`/plants/${plant._id || plant.id}`} className="block group">
-      <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-lg p-4 hover:shadow-md dark:hover:shadow-zinc-900 transition-all duration-200 group-hover:border-green-300 dark:group-hover:border-green-600 h-full">
+      <div className="bg-white dark:bg-zinc-900 border-2 border-zinc-200 dark:border-zinc-700 rounded-lg p-4 transition-all duration-200 group-hover:border-green-300 dark:group-hover:border-green-600 h-full">
         {/* هدر کارت */}
         <div className="flex items-start justify-between mb-3">
           <div className="flex items-center">

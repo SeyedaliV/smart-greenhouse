@@ -1,35 +1,68 @@
 import { Link } from 'react-router-dom';
-import { MapPin, Cog, Thermometer, Droplets, Sprout, Sun, Leaf, Gauge } from 'lucide-react';
+import { MapPin, Cog, Thermometer, Droplets, Sprout, Sun, Leaf, Gauge, Power } from 'lucide-react';
 
 const ZoneCard = ({ zone }) => {
-  const getZoneColor = (zoneName) => {
-    switch (zoneName) {
-      case 'Zone A': return 'border-red-200 dark:border-red-800 hover:border-red-400 dark:hover:border-red-600';
-      case 'Zone B': return 'border-green-200 dark:border-green-800 hover:border-green-400 dark:hover:border-green-600';
-      case 'Zone C': return 'border-blue-200 dark:border-blue-800 hover:border-blue-400 dark:hover:border-blue-600';
-      case 'Zone D': return 'border-purple-200 dark:border-purple-800 hover:border-purple-400 dark:hover:border-purple-600';
-      default: return 'border-zinc-200 dark:border-zinc-700 hover:border-zinc-400 dark:hover:border-zinc-500';
-    }
+  const getZoneColor = () => {
+    return 'border-zinc-200 dark:border-zinc-700 hover:border-zinc-400 dark:hover:border-zinc-500';
   };
 
-  const getZoneIcon = (zoneName) => {
-    switch (zoneName) {
-      case 'Zone A': return '🍅'; // Tomato
-      case 'Zone B': return '🥒'; // Cucumber
-      case 'Zone C': return '🥬'; // Lettuce
-      case 'Zone D': return '🫑'; // Bell Pepper
-      default: return '🌱';
-    }
+  const getZoneIcon = (plantType) => {
+    const plantEmojis = {
+      tomato: '🍅',
+      cucumber: '🥒',
+      lettuce: '🥬',
+      bellpepper: '🫑',
+      eggplant: '🍆',
+      carrot: '🥕',
+      potato: '🥔',
+      onion: '🧅',
+      garlic: '🧄',
+      broccoli: '🥦',
+      corn: '🌽',
+      hotPepper: '🌶️',
+      avocado: '🥑',
+      banana: '🍌',
+      apple: '🍎',
+      orange: '🍊',
+      lemon: '🍋',
+      grapes: '🍇',
+      watermelon: '🍉',
+      strawberry: '🍓',
+      blueberries: '🫐',
+      cherries: '🍒',
+      peach: '🍑',
+      mango: '🥭',
+      pineapple: '🍍',
+      coconut: '🥥',
+      kiwi: '🥝',
+      spinach: '🥬',
+      kale: '🥬',
+      cabbage: '🥬',
+      mushroom: '🍄',
+      peanuts: '🥜',
+      chestnut: '🌰',
+      olive: '🫒',
+      wheat: '🌾',
+      rice: '🌾',
+      herbs: '🌿',
+      basil: '🌿',
+      mint: '🌿',
+      rosemary: '🌿',
+      thyme: '🌿',
+      lavender: '🌿'
+    };
+
+    return plantEmojis[plantType] || '🌱';
   };
 
   return (
     <Link 
       to={`/zones/${zone._id}`}
-      className={`block p-6 rounded-xl border-2 transition-all duration-200 hover:shadow-md dark:hover:shadow-zinc-900 ${getZoneColor(zone.name)}`}
+      className={`block p-6 rounded-xl border-2 transition-all duration-200 hover:shadow-md dark:hover:shadow-zinc-900 ${getZoneColor()}`}
     >
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center space-x-3">
-          <div className="text-2xl">{getZoneIcon(zone.name)}</div>
+          <div className="text-2xl">{getZoneIcon(zone.plantType)}</div>
           <div>
             <h3 className="text-xl font-bold text-zinc-900 dark:text-white">{zone.name}</h3>
             <p className="text-zinc-600 dark:text-gray-400 text-sm">{zone.description}</p>
@@ -55,13 +88,17 @@ const ZoneCard = ({ zone }) => {
           <div className="text-xs text-zinc-500 dark:text-gray-400">Plants</div>
         </div>
         <div className="text-center p-3 bg-white dark:bg-zinc-800 rounded-lg border border-zinc-100 dark:border-zinc-700">
-          <Cog size={18} className="mx-auto text-blue-500 mb-1" />
-          <div className="text-lg font-bold text-zinc-900 dark:text-white">4</div>
+          <Power size={18} className="mx-auto text-blue-500 mb-1" />
+          <div className="text-lg font-bold text-zinc-900 dark:text-white">
+            {zone.deviceCount ?? 0}
+          </div>
           <div className="text-xs text-zinc-500 dark:text-gray-400">Devices</div>
         </div>
         <div className="text-center p-3 bg-white dark:bg-zinc-800 rounded-lg border border-zinc-100 dark:border-zinc-700">
           <Gauge size={18} className="mx-auto text-purple-500 mb-1" />
-          <div className="text-lg font-bold text-zinc-900 dark:text-white">4</div>
+          <div className="text-lg font-bold text-zinc-900 dark:text-white">
+            {zone.sensorCount ?? 0}
+          </div>
           <div className="text-xs text-zinc-500 dark:text-gray-400">Sensors</div>
         </div>
       </div>

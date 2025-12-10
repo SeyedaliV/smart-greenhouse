@@ -5,6 +5,7 @@ import {
   createZone,
   getZonePlants,
   getZoneById,
+  deleteZone,
 } from '../controllers/zoneController.js';
 
 const router = express.Router();
@@ -20,5 +21,6 @@ router.post('/complete-seed', Seed);
 
 router.get('/:id', getZoneById);
 router.get('/:id/plants', getZonePlants);
+router.delete('/:id', deleteZone);
 
 export default router;

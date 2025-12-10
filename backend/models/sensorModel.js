@@ -20,8 +20,8 @@ const sensorSchema = new mongoose.Schema({
     enum: ['°C', '%', 'lux']
   },
   zone: {
-    type: String,
-    enum: ['Zone A', 'Zone B', 'Zone C', 'Zone D']
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Zone'
   },
   status: {
     type: String,
@@ -33,7 +33,7 @@ const sensorSchema = new mongoose.Schema({
   },
   plantType: {
     type: String,
-    enum: ['tomato', 'cucumber', 'lettuce', 'bellpepper'],
+    enum: ['tomato', 'cucumber', 'lettuce', 'bellpepper', 'eggplant', 'carrot', 'potato', 'onion', 'garlic', 'broccoli', 'corn', 'hotPepper', 'avocado', 'banana', 'apple', 'orange', 'lemon', 'grapes', 'watermelon', 'strawberry', 'blueberries', 'cherries', 'peach', 'mango', 'pineapple', 'coconut', 'kiwi', 'spinach', 'kale', 'cabbage', 'mushroom', 'peanuts', 'chestnut', 'olive', 'wheat', 'rice', 'herbs', 'basil', 'mint', 'rosemary', 'thyme', 'lavender'],
     required: function () {
       return this.type === 'soilMoisture';
     }

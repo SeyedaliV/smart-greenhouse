@@ -1,7 +1,7 @@
 import { Fan, Flame, Lightbulb, Waves } from 'lucide-react';
 import { useState } from 'react';
 
-const DeviceCard = ({ device, onControl }) => {
+const DeviceCard = ({ device, onControl, onDelete }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const deviceIcons = {
@@ -83,7 +83,7 @@ const DeviceCard = ({ device, onControl }) => {
         {/* Zone Information */}
         <div className="flex justify-between text-sm">
           <span className="text-zinc-600 dark:text-gray-400">Zone:</span>
-          <span className="font-medium text-zinc-700 dark:text-gray-300">{device.zone || 'Not assigned'}</span>
+          <span className="font-medium text-zinc-700 dark:text-gray-300">{device.zone?.name || device.zone || 'Not assigned'}</span>
         </div>
         
         {device.powerConsumption && (
@@ -99,7 +99,12 @@ const DeviceCard = ({ device, onControl }) => {
         </div>
         
         <div className="flex justify-between text-sm">
-          <span className="text-zinc-600 dark:text-gray-400">Device ID:</span>
+          <span className="text-zinc-600 dark:text-gray-400">Device Code:</span>
+          <span className="font-medium text-zinc-700 dark:text-gray-300">{device.specificCode}</span>
+        </div>
+
+        <div className="flex justify-between text-sm">
+          <span className="text-zinc-600 dark:text-gray-400">Device DB ID:</span>
           <span className="font-medium text-zinc-700 dark:text-gray-300">{device.id || device._id}</span>
         </div>
       </div>
@@ -109,7 +114,7 @@ const DeviceCard = ({ device, onControl }) => {
         <label className="block text-sm font-medium text-zinc-700 dark:text-gray-300 mb-2">
           Control Device:
         </label>
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-4 gap-2">
           {['ON', 'OFF', 'AUTO'].map((status) => (
             <button
               key={status}
@@ -126,6 +131,12 @@ const DeviceCard = ({ device, onControl }) => {
               {status}
             </button>
           ))}
+           <button
+            onClick={() => onDelete(device.id || device._id)}
+            className="px-3 py-2 rounded-lg text-sm font-medium transition duration-200 w-full bg-red-500 text-white hover:bg-red-600"
+          >
+            Delete Device
+          </button>
         </div>
       </div>
 

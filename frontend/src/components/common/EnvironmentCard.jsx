@@ -1,4 +1,4 @@
-import { Droplets, Lightbulb, Shovel, Thermometer } from "lucide-react";
+import { Droplets, Sprout, Sun, Thermometer } from "lucide-react";
 
 const EnvironmentCard = ({ type, value, unit, status = 'normal' }) => {
   const statusConfig = {
@@ -13,9 +13,9 @@ const EnvironmentCard = ({ type, value, unit, status = 'normal' }) => {
     humidity: <div className="size-9 rounded-md bg-blue-50 dark:bg-blue-900/20 flex justify-center items-center">
     <Droplets className="text-blue-500" /></div>, 
     light: <div className="size-9 rounded-md bg-yellow-50 dark:bg-yellow-900/20 flex justify-center items-center">
-    <Lightbulb className="text-yellow-500" /></div>,
-    soilMoisture: <div className="size-9 rounded-md bg-amber-50 dark:bg-amber-900/20 flex justify-center items-center">
-    <Shovel className="text-amber-700 dark:text-amber-500" /></div>
+    <Sun className="text-yellow-500" /></div>,
+    soilMoisture: <div className="size-9 rounded-md bg-green-50 dark:bg-green-900/20 flex justify-center items-center">
+    <Sprout className="text-green-700 dark:text-green-500" /></div>
   };
 
   const config = statusConfig[status];
