@@ -2,6 +2,7 @@ import Zone from '../models/zoneModel.js';
 import Plant from '../models/plantModel.js';
 import Device from '../models/deviceModel.js';
 import Sensor from '../models/sensorModel.js';
+import { createAuditLog } from './auditLogController.js';
 
 // دریافت همه زون‌ها به همراه تعداد دقیق گیاهان هر زون
 export const getZones = async (req, res) => {
@@ -9,17 +10,56 @@ export const getZones = async (req, res) => {
     // همه‌ی زون‌ها را بگیر
     const zones = await Zone.find().lean();
 
-    // برای هر زون تعداد گیاهان، دستگاه‌ها و سنسورها را حساب کن
+    // 📊 یک‌بار برای همه زون‌ها، سنسورهای عمومی (بدون plant) را گروه‌بندی کن
+    const sensorAggregates = await Sensor.aggregate([
+      {
+        $match: {
+          plant: null
+        }
+      },
+      {
+        $group: {
+          _id: { zone: '$zone', type: '$type' },
+          avgValue: { $avg: '$value' }
+        }
+      }
+    ]);
+
+    const envByZone = new Map();
+    sensorAggregates.forEach((entry) => {
+      const zoneId = entry._id.zone?.toString();
+      if (!zoneId) return;
+      if (!envByZone.has(zoneId)) {
+        envByZone.set(zoneId, {});
+      }
+      const type = entry._id.type;
+      envByZone.get(zoneId)[type] = Math.round(entry.avgValue * 10) / 10;
+    });
+
+    // برای هر زون تعداد گیاهان، دستگاه‌ها و سنسورها را حساب کن و وضعیت و میانگین سنسورها را اضافه کن
     const zonesWithCounts = await Promise.all(
       zones.map(async (zone) => {
         const plantCount = await Plant.countDocuments({ zone: zone._id });
         const deviceCount = await Device.countDocuments({ zone: zone._id });
         const sensorCount = await Sensor.countDocuments({ zone: zone._id });
+
+        const env = envByZone.get(zone._id.toString()) || {};
+
+        // وضعیت محاسبه‌شده: اگر هیچ گیاهی ندارد، inactive
+        const derivedStatus = plantCount === 0 ? 'inactive' : zone.status;
+
         return {
           ...zone,
           plantCount,
           deviceCount,
           sensorCount,
+          status: derivedStatus,
+          environment: {
+            temperature: env.temperature || 0,
+            humidity: env.humidity || 0,
+            soilMoisture: env.soilMoisture || 0,
+            light: env.light || 0,
+          },
         };
       })
     );
@@ -33,18 +73,27 @@ export const getZones = async (req, res) => {
 // ایجاد زون جدید با دستگاه‌ها و سنسورها
 export const createZone = async (req, res) => {
   try {
-    const { plantType, sensors } = req.body;
+    const { plantType } = req.body;
+
+    // اعتبارسنجی ورودی
+    if (!plantType) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'plantType is required'
+      });
+    }
 
     // Calculate next zone name
     const existingZones = await Zone.find({}, 'name').lean();
-    const existingLetters = existingZones.map(zone => {
-      const match = zone.name.match(/Zone (\w)/);
-      return match ? match[1] : null;
-    }).filter(Boolean);
+    const existingLetters = existingZones
+      .map(zone => {
+        const match = zone.name?.match(/Zone (\w)/i);
+        return match ? match[1].toUpperCase() : null;
+      })
+      .filter(Boolean);
 
-    const letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
-
-    let nextLetter = 'E'; // fallback
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+    let nextLetter = 'A';
     for (const letter of letters) {
       if (!existingLetters.includes(letter)) {
         nextLetter = letter;
@@ -55,7 +104,7 @@ export const createZone = async (req, res) => {
     const zoneName = `Zone ${nextLetter}`;
 
     // Plant type settings
-    const plantSettings = {
+    const defaultSettings = {
       tomato: {
         description: 'Tomato Zone',
         settings: {
@@ -433,94 +482,34 @@ export const createZone = async (req, res) => {
           soilMoisture: { min: 30, max: 50, optimal: 40 },
           light: { min: 600, max: 1000, optimal: 800 }
         }
+      },
+      default: {
+        description: `${plantType.charAt(0).toUpperCase() + plantType.slice(1)} Zone`,
+        settings: {
+          temperature: { min: 18, max: 30, optimal: 24 },
+          humidity: { min: 50, max: 80, optimal: 65 },
+          soilMoisture: { min: 40, max: 70, optimal: 55 },
+          light: { min: 500, max: 1000, optimal: 750 }
+        }
       }
     };
 
-    const plantConfig = plantSettings[plantType];
+    const config = defaultSettings[plantType] || defaultSettings.default;
+    const { description, settings } = config;
 
-    // Create zone
-    const zone = new Zone({
+    // ایجاد زون
+    const newZone = await Zone.create({
       name: zoneName,
       plantType,
-      description: plantConfig.description,
-      settings: plantConfig.settings,
+      description,
+      settings,
       status: 'active'
     });
 
-    await zone.save();
-
-    // Create sensors
-    const sensorPromises = [];
-    const sensorTypes = ['temperature', 'humidity', 'soilMoisture', 'light'];
-
-    for (const sensorType of sensorTypes) {
-      const count = sensors[sensorType] || 0;
-      for (let i = 1; i <= count; i++) {
-        const sensorNameMap = {
-          temperature: 'Temperature Sensor',
-          humidity: 'Humidity Sensor',
-          soilMoisture: 'Soil Moisture Sensor',
-          light: 'Light Sensor'
-        };
-
-        const unitMap = {
-          temperature: '°C',
-          humidity: '%',
-          soilMoisture: '%',
-          light: 'lux'
-        };
-
-        const baseName = sensorNameMap[sensorType];
-        const sensorName = `${baseName} ${i}`;
-
-        // Set initial values based on optimal settings
-        let initialValue;
-        switch (sensorType) {
-          case 'temperature':
-            initialValue = plantConfig.settings.temperature.optimal;
-            break;
-          case 'humidity':
-            initialValue = plantConfig.settings.humidity.optimal;
-            break;
-          case 'soilMoisture':
-            initialValue = plantConfig.settings.soilMoisture.optimal;
-            break;
-          case 'light':
-            initialValue = plantConfig.settings.light.optimal;
-            break;
-          default:
-            initialValue = 0;
-        }
-
-        sensorPromises.push(
-          Sensor.create({
-            name: sensorName,
-            type: sensorType,
-            value: initialValue,
-            unit: unitMap[sensorType],
-            zone: zone._id,
-            status: 'active',
-            plantType: sensorType === 'soilMoisture' ? plantType : undefined,
-            lastUpdate: new Date()
-          })
-        );
-      }
-    }
-
-    // Execute sensor creations
-    await Promise.all(sensorPromises);
-
-    // Return zone with counts
-    const deviceCount = await Device.countDocuments({ zone: zone._id });
-    const sensorCount = await Sensor.countDocuments({ zone: zone._id });
-
-    const zoneWithCounts = {
-      ...zone.toObject(),
-      deviceCount,
-      sensorCount
-    };
-
-    res.status(201).json(zoneWithCounts);
+    res.status(201).json({
+      status: 'success',
+      data: { zone: newZone }
+    });
   } catch (error) {
     console.error('Error creating zone:', error);
     res.status(500).json({ message: error.message });
@@ -539,10 +528,40 @@ export const getZoneById = async (req, res) => {
     // گیاهان این زون رو جداگانه بگیر
     const plants = await Plant.find({ zone: req.params.id })
       .select('name type status currentStats plantingDate estimatedHarvestDate daysToMature optimalConditions');
-    
+
+    // 📊 میانگین سنسورهای عمومی این زون (بدون plant)
+    const sensorEnvAggregates = await Sensor.aggregate([
+      {
+        $match: {
+          zone: zone._id,
+          plant: null,
+        },
+      },
+      {
+        $group: {
+          _id: '$type',
+          avgValue: { $avg: '$value' },
+        },
+      },
+    ]);
+
+    const env = {};
+    sensorEnvAggregates.forEach((entry) => {
+      env[entry._id] = Math.round(entry.avgValue * 10) / 10;
+    });
+
+    const derivedStatus = plants.length === 0 ? 'inactive' : zone.status;
+
     const zoneWithPlants = {
       ...zone.toObject(),
-      plants: plants
+      status: derivedStatus,
+      plants: plants,
+      environment: {
+        temperature: env.temperature || 0,
+        humidity: env.humidity || 0,
+        soilMoisture: env.soilMoisture || 0,
+        light: env.light || 0,
+      },
     };
     
     res.json(zoneWithPlants);
@@ -590,6 +609,22 @@ export const deleteZone = async (req, res) => {
         message: 'Zone not found'
       });
     }
+
+    // Audit log for zone deletion
+    await createAuditLog({
+      req,
+      actionType: 'ZONE_DELETE',
+      entityType: 'Zone',
+      entityId: zone._id.toString(),
+      entityName: zone.name,
+      description: 'Deleted zone and all associated resources',
+      meta: {
+        deletedDevices: deletedDevices.deletedCount,
+        deletedSensors: deletedSensors.deletedCount,
+        deletedPlants: deletedPlants.deletedCount,
+        plantType: zone.plantType,
+      },
+    });
 
     console.log('✅ Zone deleted successfully:', zone.name);
     res.status(200).json({

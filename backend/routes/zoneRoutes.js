@@ -1,4 +1,5 @@
 import express from 'express';
+import { protect } from '../controllers/authController.js';
 import { Seed } from '../controllers/SeedController.js';
 import {
   getZones,
@@ -9,6 +10,8 @@ import {
 } from '../controllers/zoneController.js';
 
 const router = express.Router();
+
+router.use(protect);
 
 router.get('/', getZones);
 router.post('/', createZone);

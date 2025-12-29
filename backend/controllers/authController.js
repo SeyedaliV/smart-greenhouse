@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/userModel.js';
+import { createAuditLog } from './auditLogController.js';
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -71,6 +72,22 @@ export const login = async (req, res) => {
         status: 'error',
         message: 'Incorrect username or password'
       });
+    }
+
+    // ثبت لاگ ورود موفق
+    try {
+      await createAuditLog({
+        req,
+        actionType: 'LOGIN',
+        entityType: 'User',
+        entityId: user._id.toString(),
+        entityName: user.username,
+        description: 'User logged in',
+        meta: {},
+      });
+    } catch (e) {
+      // در صورت خطا، لاگ اصلی auth نباید خراب شود
+      console.error('Failed to write login audit log:', e.message);
     }
 
     createSendToken(user, 200, res);

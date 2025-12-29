@@ -4,6 +4,7 @@ import DeviceForm from '../components/devices/DeviceForm';
 import PowerConsumption from '../components/devices/PowerConsumption';
 import { devicesService, zonesService } from '../services/api';
 import Loading from '../components/common/Loading';
+import { Power } from 'lucide-react';
 
 const Devices = () => {
   const [devices, setDevices] = useState([]);
@@ -107,7 +108,10 @@ const Devices = () => {
     {/* هدر صفحه */}
     <div className="flex justify-between items-center">
       <div>
-        <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">Devices Control</h1>
+        <h1 className="text-3xl font-bold text-zinc-900 dark:text-white flex items-center gap-2">
+          <Power className="text-blue-500" />
+          System Logs
+        </h1>
         <p className="text-zinc-600 dark:text-zinc-300">Manage and control your greenhouse devices</p>
       </div>
       

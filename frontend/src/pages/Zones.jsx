@@ -1,8 +1,10 @@
+// frontend/pages/Zones.jsx (یا هر جایی که هست)
 import { useState, useEffect } from 'react';
 import { zonesService } from '../services/api';
 import ZoneCard from '../components/zones/ZoneCard';
 import ZoneForm from '../components/zones/ZoneForm';
 import Loading from '../components/common/Loading';
+import { Grid, LayoutGrid } from 'lucide-react';
 
 const Zones = () => {
   const [zones, setZones] = useState([]);
@@ -15,7 +17,10 @@ const Zones = () => {
 
   const fetchZones = async () => {
     try {
-      const zonesData = await zonesService.getAll();
+      setLoading(true);
+      const response = await zonesService.getAll();
+      // مطمئن شو ساختار درست باشه
+      const zonesData = response.data?.zones || response || [];
       setZones(zonesData);
     } catch (error) {
       console.error('Error fetching zones:', error);
@@ -24,22 +29,24 @@ const Zones = () => {
     }
   };
 
-  const handleZoneCreated = (newZone) => {
-    setZones(prevZones => [...prevZones, newZone]);
-    setShowCreateModal(false);
+  // 🔥 این تابع رو تغییر دادم – حالا دوباره fetch می‌کنه
+  const handleZoneCreated = async () => {
+    await fetchZones(); // دوباره همه زون‌ها رو از بک‌اند بگیر
+    setShowCreateModal(false); // فرم رو ببند
   };
 
-  if (loading) {
-    return (
-      <Loading />
-    );
+  if (loading && zones.length === 0) {
+    return <Loading />;
   }
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-start">
         <div>
-          <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">Greenhouse Zones</h1>
+          <h1 className="text-3xl font-bold text-zinc-900 dark:text-white flex items-center gap-2">
+            <LayoutGrid className="text-purple-500" />
+            Greenhouse Zones
+          </h1>
           <p className="text-zinc-600 dark:text-gray-400">Manage and monitor all zones</p>
         </div>
         <div className="flex items-center gap-4">
@@ -65,7 +72,7 @@ const Zones = () => {
       {showCreateModal && (
         <ZoneForm
           onClose={() => setShowCreateModal(false)}
-          onSave={handleZoneCreated}
+          onSave={handleZoneCreated}  // <-- این حالا fetchZones رو صدا می‌زنه
         />
       )}
     </div>

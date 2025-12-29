@@ -4,11 +4,11 @@ const PlantDeleteModal = ({ plant, onClose, onConfirm }) => {
   if (!plant) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 backdrop-brightness-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white dark:bg-zinc-800 rounded-xl shadow-xl max-w-md w-full">
         <div className="p-6">
           <div className="flex items-center space-x-3 mb-4">
-            <div className="flex-shrink-0">
+            <div className="shrink-0">
               <AlertTriangle className="h-12 w-12 text-red-500" />
             </div>
             <div>

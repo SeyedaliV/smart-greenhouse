@@ -46,15 +46,15 @@ const Troubleshooting = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
-  const [alerts, setAlerts] = useState([]);
+  const [alerts, setAlerts] = useState([]);           // همیشه آرایه
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const [devices, setDevices] = useState([]);
-  const [zones, setZones] = useState([]);
-  const [sensors, setSensors] = useState([]);
-  const [plants, setPlants] = useState([]);
+  const [devices, setDevices] = useState([]);        // آرایه خالی اولیه
+  const [zones, setZones] = useState([]);            // آرایه خالی اولیه
+  const [sensors, setSensors] = useState([]);        // آرایه خالی اولیه
+  const [plants, setPlants] = useState([]);          // آرایه خالی اولیه
 
   useEffect(() => {
     const initialIndex = Number(searchParams.get('alertIndex') ?? 0);
@@ -80,11 +80,20 @@ const Troubleshooting = () => {
 
         const dashboardData = dashboardRes?.data || dashboardRes;
 
-        setAlerts(dashboardData.alerts || []);
-        setDevices(devicesRes?.data?.devices || devicesRes?.devices || devicesRes || []);
-        setZones(zonesRes || []);
-        setSensors(sensorsRes || []);
-        setPlants(plantsRes?.data?.plants || plantsRes?.plants || plantsRes || []);
+        setAlerts(Array.isArray(dashboardData.alerts) ? dashboardData.alerts : []);
+        
+        // ایمن‌سازی داده‌های دریافتی
+        setDevices(Array.isArray(devicesRes?.data?.devices) ? devicesRes.data.devices :
+                   Array.isArray(devicesRes?.devices) ? devicesRes.devices :
+                   Array.isArray(devicesRes) ? devicesRes : []);
+        
+        setZones(Array.isArray(zonesRes) ? zonesRes : []);
+        
+        setSensors(Array.isArray(sensorsRes) ? sensorsRes : []);
+        
+        setPlants(Array.isArray(plantsRes?.data?.plants) ? plantsRes.data.plants :
+                  Array.isArray(plantsRes?.plants) ? plantsRes.plants :
+                  Array.isArray(plantsRes) ? plantsRes : []);
       } catch (err) {
         console.error('Troubleshooting load error:', err);
         setError('Failed to load troubleshooting data');
@@ -110,7 +119,7 @@ const Troubleshooting = () => {
   );
 
   const relatedDevices = useMemo(() => {
-    if (!relatedZoneName) return devices;
+    if (!relatedZoneName && !selectedAlert?.message) return devices;
     return devices.filter(
       (d) =>
         d.zone === relatedZoneName ||
@@ -213,20 +222,20 @@ const Troubleshooting = () => {
             </span>
           </div>
 
-           <button
-             onClick={() => navigate('/logs')}
-             className="mt-1 inline-flex items-center px-3 py-1 rounded-lg border border-zinc-200 dark:border-zinc-700 text-xs text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800"
-           >
-             <Activity size={14} className="mr-1" />
-             View full log
-           </button>
+          <button
+            onClick={() => navigate('/logs')}
+            className="mt-1 inline-flex items-center px-3 py-1 rounded-lg border border-zinc-200 dark:border-zinc-700 text-xs text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800"
+          >
+            <Activity size={14} className="mr-1" />
+            View full log
+          </button>
         </div>
       </div>
 
       {/* Main layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="flex gap-3">
         {/* Alerts list */}
-        <div className="lg:col-span-1">
+        <div className="lg:col-span-1 w-1/2">
           <div className="bg-white dark:bg-zinc-800/40 border border-zinc-200 dark:border-zinc-700 rounded-xl overflow-hidden h-full flex flex-col">
             <div className="px-4 py-3 border-b border-zinc-200 dark:border-zinc-700 flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -305,7 +314,7 @@ const Troubleshooting = () => {
         </div>
 
         {/* Troubleshooting panel */}
-        <div className="lg:col-span-2 space-y-4">
+        <div className="lg:col-span-2 space-y-4 w-full">
           {selectedAlert ? (
             <>
               {/* Selected alert header */}
@@ -420,7 +429,7 @@ const Troubleshooting = () => {
               )}
 
               {/* IoT control panel */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="grid gap-3">
                 {/* Devices control */}
                 <div className="bg-white h-auto dark:bg-zinc-800/40 border border-zinc-200 dark:border-zinc-700 rounded-xl p-4">
                   <div className="flex items-center justify-between mb-3">
@@ -440,11 +449,11 @@ const Troubleshooting = () => {
                       No devices associated with this alert.
                     </p>
                   ) : (
-                    <div className="space-y-2 max-h-64 overflow-y-auto">
+                    <div className="space-y-2 grid grid-cols-2 max-h-64 overflow-y-auto">
                       {relatedDevices.map((device) => (
                         <div
                           key={device.id || device._id}
-                          className="flex items-center justify-between text-xs bg-zinc-50 dark:bg-zinc-900/40 px-3 py-2 rounded-lg"
+                          className="flex items-center justify-between bg-zinc-50 dark:bg-zinc-900/40 px-3 py-2 rounded-lg"
                         >
                           <div>
                             <p className="font-medium text-zinc-900 dark:text-zinc-100">
@@ -528,7 +537,7 @@ const Troubleshooting = () => {
                         No sensors found for this zone.
                       </p>
                     ) : (
-                      <div className="space-y-2 max-h-32 overflow-y-auto text-xs">
+                      <div className="space-y-2 max-h-32 overflow-y-auto">
                         {relatedSensors.map((sensor) => (
                           <div
                             key={sensor.id || sensor._id}
@@ -564,8 +573,7 @@ const Troubleshooting = () => {
                               </span>
                             </div>
                             <span className="font-mono text-[11px] text-zinc-800 dark:text-zinc-100">
-                              {sensor.value}
-                              {sensor.unit}
+                              {sensor.value}{sensor.unit}
                             </span>
                           </div>
                         ))}
@@ -592,7 +600,7 @@ const Troubleshooting = () => {
                         No plants matched for this alert.
                       </p>
                     ) : (
-                      <div className="space-y-2 max-h-32 overflow-y-auto text-xs">
+                      <div className="space-y-2 overflow-y-auto">
                         {relatedPlants.map((plant) => (
                           <div
                             key={plant.id || plant._id}
@@ -637,5 +645,3 @@ const Troubleshooting = () => {
 };
 
 export default Troubleshooting;
-
-

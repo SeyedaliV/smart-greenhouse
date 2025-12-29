@@ -3,7 +3,7 @@ import PlantTable from '../components/plants/PlantTable';
 import PlantForm from '../components/plants/PlantForm';
 import PlantDeleteModal from '../components/plants/PlantDeleteModal';
 import { plantsService, zonesService } from '../services/api';
-import { Filter } from 'lucide-react';
+import { Filter, Leaf } from 'lucide-react';
 import { getPlantStatus } from '../utils/plantCalculations';
 import Loading from '../components/common/Loading';
 
@@ -87,6 +87,11 @@ const Plants = () => {
   const handleFormClose = () => {
     setShowForm(false);
     setEditingPlant(null);
+  };
+
+  const handleFormSave = () => {
+    setShowForm(false);
+    setEditingPlant(null);
     fetchData();
   };
 
@@ -109,7 +114,10 @@ const Plants = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">Plants Management</h1>
+          <h1 className="text-3xl font-bold text-zinc-900 dark:text-white flex items-center gap-2">
+            <Leaf className="text-green-500" />
+            Plants Management
+          </h1>
           <p className="text-zinc-600 dark:text-zinc-400">Manage all plants in your greenhouse zones</p>
         </div>
         <button
@@ -156,7 +164,7 @@ const Plants = () => {
         <PlantForm
           plant={editingPlant}
           onClose={handleFormClose}
-          onSave={handleFormClose}
+          onSave={handleFormSave}
           zones={zones}
         />
       )}

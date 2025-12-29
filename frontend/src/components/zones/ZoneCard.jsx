@@ -103,47 +103,49 @@ const ZoneCard = ({ zone }) => {
         </div>
       </div>
 
-      {/* شرایط محیطی */}
-      <div className="space-y-2">
-        <h4 className="text-sm font-medium text-zinc-700 dark:text-gray-300 mb-2">Optimal Conditions:</h4>
-        <div className="flex items-center justify-between text-sm">
-          <div className="flex items-center space-x-2">
-            <Thermometer size={16} className="text-red-500" />
-            <span className="text-zinc-600 dark:text-gray-400">Temp:</span>
+      {/* وضعیت عمومی محیط براساس سنسورهای عمومی زون */}
+      <div className="flex-col space-y-2">
+        <h4 className="text-sm font-medium text-zinc-700 dark:text-gray-300 mb-2">General Status:</h4>
+        <div className='flex justify-between space-x-3'>
+          <div className="text-center w-full p-3 bg-white dark:bg-zinc-800 rounded-lg border border-zinc-100 dark:border-zinc-700">
+            <div className="flex-col justify-center items-center space-x-2">
+              <Thermometer size={18} className="text-red-500 mx-auto" />
+              <span className="text-zinc-500 text-xs dark:text-gray-400">Temp:</span>
+            </div>
+            <span className="font-medium text-zinc-900 dark:text-white">
+              {zone.environment?.temperature ?? 0}°C
+            </span>
           </div>
-          <span className="font-medium text-zinc-900 dark:text-white">
-            {zone.settings?.temperature?.optimal || 0}°C
-          </span>
-        </div>
-        
-        <div className="flex items-center justify-between text-sm">
-          <div className="flex items-center space-x-2">
-            <Droplets size={16} className="text-blue-500" />
-            <span className="text-zinc-600 dark:text-gray-400">Humidity:</span>
+          
+          <div className="text-center w-full p-3 bg-white dark:bg-zinc-800 rounded-lg border border-zinc-100 dark:border-zinc-700">
+            <div className="flex-col justify-center items-center space-x-2">
+              <Droplets size={18} className="text-blue-500 mx-auto" />
+              <span className="text-zinc-500 text-xs dark:text-gray-400">Humidity:</span>
+            </div>
+            <span className="font-medium text-zinc-900 dark:text-white">
+              {zone.environment?.humidity ?? 0}%
+            </span>
           </div>
-          <span className="font-medium text-zinc-900 dark:text-white">
-            {zone.settings?.humidity?.optimal || 0}%
-          </span>
-        </div>
-        
-        <div className="flex items-center justify-between text-sm">
-          <div className="flex items-center space-x-2">
-            <Sprout size={16} className="text-green-500" />
-            <span className="text-zinc-600 dark:text-gray-400">Soil:</span>
+          
+          <div className="text-center w-full p-3 bg-white dark:bg-zinc-800 rounded-lg border border-zinc-100 dark:border-zinc-700">
+            <div className="flex-col justify-center items-center space-x-2">
+              <Sprout size={18} className="text-green-500 mx-auto" />
+              <span className="text-zinc-500 text-xs dark:text-gray-400">Soil:</span>
+            </div>
+            <span className="font-medium text-zinc-900 dark:text-white">
+              {zone.environment?.soilMoisture ?? 0}%
+            </span>
           </div>
-          <span className="font-medium text-zinc-900 dark:text-white">
-            {zone.settings?.soilMoisture?.optimal || 0}%
-          </span>
-        </div>
-        
-        <div className="flex items-center justify-between text-sm">
-          <div className="flex items-center space-x-2">
-            <Sun size={16} className="text-yellow-500" />
-            <span className="text-zinc-600 dark:text-gray-400">Light:</span>
+          
+          <div className="text-center w-full p-3 bg-white dark:bg-zinc-800 rounded-lg border border-zinc-100 dark:border-zinc-700">
+            <div className="flex-col justify-center items-center space-x-2">
+              <Sun size={18} className="text-yellow-500 mx-auto" />
+              <span className="text-zinc-500 text-xs dark:text-gray-400">Light:</span>
+            </div>
+            <span className="font-medium text-zinc-900 dark:text-white">
+              {zone.environment?.light ?? 0} lux
+            </span>
           </div>
-          <span className="font-medium text-zinc-900 dark:text-white">
-            {zone.settings?.light?.optimal || 0} lux
-          </span>
         </div>
       </div>
 

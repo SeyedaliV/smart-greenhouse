@@ -46,7 +46,7 @@ const DeviceForm = ({ onClose, onSave, zones, preSelectedZone }) => {
   const selectedType = deviceTypeOptions.find(type => type.value === formData.type);
 
   return (
-    <div className="fixed h-screen inset-0 backdrop-brightness-50 dark:backdrop-brightness-75 flex items-center justify-center p-4 z-50">
+    <div className="fixed h-screen inset-0 backdrop-brightness-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white dark:bg-zinc-800 rounded-xl shadow-xl w-full max-w-md">
         <div className="p-6 border-b border-zinc-200 dark:border-zinc-700">
           <h2 className="text-xl font-semibold text-zinc-900 dark:text-white">

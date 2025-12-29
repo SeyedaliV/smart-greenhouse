@@ -3,10 +3,10 @@ import StatCard from '../components/common/StatCard';
 import EnvironmentCard from '../components/common/EnvironmentCard';
 import PlantStatusCard from '../components/plants/PlantStatusCard';
 import AlertsCard from '../components/dashboard/AlertsCard';
-import { dashboardService, automationService } from '../services/api';
+import { dashboardService } from '../services/api';
 import { Leaf, TriangleAlert, Smile, Gauge, LayoutGrid, Power } from 'lucide-react';
 import Loading from '../components/common/Loading';
-import { toast } from 'react-hot-toast';
+import { socket } from '../services/realtime';
 
 const Dashboard = () => {
   const [dashboardData, setDashboardData] = useState(null);
@@ -19,30 +19,16 @@ const Dashboard = () => {
   }, []);
 
   useEffect(() => {
-    // Simple automation tick every 10 seconds
-    const intervalId = setInterval(async () => {
-      try {
-        const data = await automationService.tick();
-        const events = data?.data?.events || [];
+    // Live alerts from socket.io
+    const handleAlertsUpdate = (serverAlerts) => {
+      setAlerts(serverAlerts || []);
+    };
 
-        events.forEach((event) => {
-          const title = `AUTO: ${event.deviceName} → ${event.newStatus}`;
-          const zoneText = event.zone ? ` in ${event.zone}` : '';
-          const metricText = event.metric && event.metricValue
-            ? ` (${event.metric}: ${event.metricValue}, target ${event.targetRange})`
-            : '';
+    socket.on('alerts:update', handleAlertsUpdate);
 
-          toast.success(`${title}${zoneText}${metricText}`, {
-            icon: '🤖',
-          });
-        });
-      } catch (err) {
-        // For now, ignore automation errors in UI to avoid noise
-        console.error('Automation tick error:', err);
-      }
-    }, 10000);
-
-    return () => clearInterval(intervalId);
+    return () => {
+      socket.off('alerts:update', handleAlertsUpdate);
+    };
   }, []);
 
   const fetchDashboardData = async () => {

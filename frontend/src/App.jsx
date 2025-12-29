@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import Login from './pages/Login';
@@ -14,8 +14,13 @@ import ProtectedRoute from './components/auth/ProtectedRoute';
 import Zones from './pages/Zones';
 import PlantDetail from './pages/PlantDetail';
 import { Toaster } from 'react-hot-toast';
+import { initRealtimeListeners } from './services/realtime';
 
 function App() {
+  useEffect(() => {
+    initRealtimeListeners();
+  }, []);
+
   return (
     <AuthProvider>
       <Router>
@@ -23,9 +28,9 @@ function App() {
           <Toaster
             position="top-right"
             toastOptions={{
-              style: {
-                fontSize: '0.875rem',
-              },
+              duration: Infinity,
+              className:
+                'bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 border border-zinc-200 dark:border-zinc-700 shadow-lg rounded-lg text-sm',
             }}
           />
           <Routes>

@@ -7,7 +7,6 @@ import {
   Settings, 
   LogOut,
   LayoutGrid,
-  Cog,
   AlertOctagon,
   Activity,
   Power
@@ -24,12 +23,12 @@ const Sidebar = () => {
   };
 
   const navItems = [
-    { path: '/', icon: Home, label: 'Dashboard' },
-    { path: '/zones', icon: LayoutGrid, label: 'Zones' },
-    { path: '/plants', icon: Leaf, label: 'Plants' },
-    { path: '/devices', icon: Power, label: 'Devices' },
-    { path: '/troubleshooting', icon: AlertOctagon, label: 'Troubleshooting' },
-    { path: '/logs', icon: Activity, label: 'Logs' },
+    { path: '/', icon: Home, tooltip: 'Home' },
+    { path: '/zones', icon: LayoutGrid, tooltip: 'Zones' },
+    { path: '/plants', icon: Leaf, tooltip: 'Plants' },
+    { path: '/devices', icon: Power, tooltip: 'Devices' },
+    { path: '/troubleshooting', icon: AlertOctagon, tooltip: 'Troubleshooting' },
+    { path: '/logs', icon: Activity, tooltip: 'Logs' },
   ];
 
   const isActive = (path) => {
@@ -60,11 +59,12 @@ const Sidebar = () => {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`p-3 rounded-xl transition-all duration-200 group relative ${
+                className={`p-3 rounded-xl transition-all duration-200 group relative tooltip tooltip-right ${
                   active 
                     ? 'bg-green-500 text-white shadow-lg' 
                     : 'text-zinc-600 dark:text-zinc-400 hover:text-green-600 dark:hover:text-green-500 hover:bg-green-50 dark:hover:bg-zinc-700'
                 }`}
+                data-tip={item.tooltip}
               >
                 <Icon size={20} />
               </Link>
@@ -78,11 +78,11 @@ const Sidebar = () => {
       {/* Bottom Controls */}
       <div className="flex flex-col gap-3 items-center">
         {/* Settings */}
-        <button 
+        {/* <button 
           className="p-3 rounded-xl text-zinc-600 dark:text-zinc-400 hover:text-blue-600 dark:hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-zinc-700 transition-all duration-200"
         >
           <Settings size={20} />
-        </button>
+        </button> */}
 
         {/* Dark Mode Toggle */}
         <ThemeToggle />
@@ -90,7 +90,7 @@ const Sidebar = () => {
         {/* Logout */}
         <button 
           onClick={handleLogout}
-          className="p-3 rounded-xl text-zinc-600 dark:text-zinc-400 hover:text-red-600 dark:hover:text-red-500 hover:bg-red-50 dark:hover:bg-zinc-700 transition-all duration-200"
+          className="p-3 rounded-xl transform scale-x-[-1] text-zinc-600 dark:text-zinc-400 hover:text-red-600 dark:hover:text-red-500 hover:bg-red-50 dark:hover:bg-zinc-700 transition-all duration-200"
         >
           <LogOut size={20} />
         </button>

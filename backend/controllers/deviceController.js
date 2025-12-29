@@ -118,12 +118,13 @@ export const createDevice = async (req, res) => {
       heater: 'HEATER'
     };
 
-    const zoneMap = {
-      'Zone A': 'ZA',
-      'Zone B': 'ZB',
-      'Zone C': 'ZC',
-      'Zone D': 'ZD'
-    };
+    const zoneMap = {};
+
+    for (let i = 0; i < 26; i++) {
+      const letter = String.fromCharCode(65 + i); // A تا Z
+      zoneMap[`Zone ${letter}`] = `Z${letter}`;
+    }
+
 
     const typePrefix = typeMap[type];
     const zonePrefix = zoneMap[zoneName];

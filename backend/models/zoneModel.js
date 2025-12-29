@@ -20,8 +20,8 @@ const zoneSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['active', 'maintenance'],
-    default: 'active'
+    enum: ['active', 'inactive', 'maintenance'],
+    default: 'inactive'
   }
 }, {
   timestamps: true

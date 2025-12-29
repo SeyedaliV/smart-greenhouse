@@ -1,6 +1,6 @@
 import express from 'express';
 import { protect } from '../controllers/authController.js';
-import { getAllPlants, getPlant, createPlant, updatePlant,  updatePlantStats, deletePlant } from '../controllers/plantController.js';
+import { getAllPlants, getPlant, createPlant, updatePlant, deletePlant } from '../controllers/plantController.js';
 
 const router = express.Router();
 
@@ -13,6 +13,5 @@ router.get('/:id', getPlant);
 router.post('/', createPlant);
 router.patch('/:id', updatePlant);
 router.delete('/:id', deletePlant);
-router.patch('/:type/stats', updatePlantStats);
 
 export default router;
