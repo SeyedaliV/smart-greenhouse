@@ -16,10 +16,8 @@ router.use(protect);
 router.get('/', getZones);
 router.post('/', createZone);
 
-// seeder اصلی که در بک‌اند استفاده می‌شود
 router.post('/seed', Seed);
 
-// برای سازگاری با فرانت‌اند که از مسیر `/zones/complete-seed` استفاده می‌کند
 router.post('/complete-seed', Seed);
 
 router.get('/:id', getZoneById);

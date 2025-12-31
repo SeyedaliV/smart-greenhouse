@@ -23,8 +23,8 @@ const Signup = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // این خط رو حتماً اضافه کن!
-    
+    e.preventDefault();
+
     if (!formData.username || !formData.password) {
       setError('Please fill in all fields');
       return;
@@ -47,7 +47,7 @@ const Signup = () => {
       const result = await signup(formData.username, formData.password);
       
       if (result.success) {
-        navigate('/'); // به دشبورد هدایت بشه
+        navigate('/');
       } else {
         setError(result.error || 'Signup failed');
       }
@@ -69,7 +69,6 @@ const Signup = () => {
           <p className="text-zinc-600">Join Smart Greenhouse</p>
         </div>
 
-        {/* نمایش خطا */}
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg mb-4 text-sm">
             {error}

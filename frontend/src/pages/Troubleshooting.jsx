@@ -46,15 +46,15 @@ const Troubleshooting = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
-  const [alerts, setAlerts] = useState([]);           // همیشه آرایه
+  const [alerts, setAlerts] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const [devices, setDevices] = useState([]);        // آرایه خالی اولیه
-  const [zones, setZones] = useState([]);            // آرایه خالی اولیه
-  const [sensors, setSensors] = useState([]);        // آرایه خالی اولیه
-  const [plants, setPlants] = useState([]);          // آرایه خالی اولیه
+  const [devices, setDevices] = useState([]);
+  const [zones, setZones] = useState([]);
+  const [sensors, setSensors] = useState([]);
+  const [plants, setPlants] = useState([]);
 
   useEffect(() => {
     const initialIndex = Number(searchParams.get('alertIndex') ?? 0);
@@ -81,8 +81,7 @@ const Troubleshooting = () => {
         const dashboardData = dashboardRes?.data || dashboardRes;
 
         setAlerts(Array.isArray(dashboardData.alerts) ? dashboardData.alerts : []);
-        
-        // ایمن‌سازی داده‌های دریافتی
+
         setDevices(Array.isArray(devicesRes?.data?.devices) ? devicesRes.data.devices :
                    Array.isArray(devicesRes?.devices) ? devicesRes.devices :
                    Array.isArray(devicesRes) ? devicesRes : []);

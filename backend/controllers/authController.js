@@ -74,7 +74,6 @@ export const login = async (req, res) => {
       });
     }
 
-    // ثبت لاگ ورود موفق
     try {
       await createAuditLog({
         req,
@@ -86,7 +85,6 @@ export const login = async (req, res) => {
         meta: {},
       });
     } catch (e) {
-      // در صورت خطا، لاگ اصلی auth نباید خراب شود
       console.error('Failed to write login audit log:', e.message);
     }
 

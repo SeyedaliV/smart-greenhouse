@@ -51,14 +51,12 @@ const Dashboard = () => {
   };
 
 
-  // حالت لودینگ
   if (loading) {
     return (
       <Loading />
     );
   }
 
-  // حالت خطا
   if (error) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -76,7 +74,6 @@ const Dashboard = () => {
     );
   }
 
-  // حالت داده نامعتبر
   if (!dashboardData || !dashboardData.overview) {
     return (
       <div className="text-center py-12">
@@ -87,12 +84,10 @@ const Dashboard = () => {
     );
   }
 
-  // حالت عادی - فقط اینجا به dashboardData.overview دسترسی داریم
   const { overview, environment, plants = [], devices = [] } = dashboardData;
 
   return (
     <div className="space-y-6">
-      {/* هدر صفحه */}
       <div className="flex justify-between">
         <div>
           <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">Dashboard</h1>
@@ -103,7 +98,6 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* کارت‌های آمار کلی */}
       <div className="flex gap-6">
         <StatCard
           title="Total Plants"
@@ -148,7 +142,6 @@ const Dashboard = () => {
         />
       </div>
 
-      {/* هشدارها */}
       <div className="gap-6">
         {/* <div className="lg:col-span-2">
           <AlertBanner plants={plants} />
@@ -160,8 +153,6 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* وضعیت محیط */}
-      
 
       <div className="bg-white dark:bg-zinc-800/30 rounded-xl border border-zinc-200 dark:border-zinc-700">
         <div className="px-6 py-3 border-b border-zinc-200 dark:border-zinc-700">
@@ -197,9 +188,8 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-      
 
-      {/* وضعیت گیاهان */}
+
       <div className="bg-white dark:bg-zinc-800/30 rounded-xl border border-zinc-200 dark:border-zinc-700">
         <div className="px-6 py-3 border-b border-zinc-200 dark:border-zinc-700">
           <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">Plant Status</h2>

@@ -1,7 +1,6 @@
 import Sensor from '../models/sensorModel.js';
 import { createAuditLog } from './auditLogController.js';
 
-// ۱. دریافت همه سنسورها
 export const getAllSensors = async (req, res) => {
   try {
     const { zone, type, status, plant } = req.query;
@@ -30,7 +29,6 @@ export const getAllSensors = async (req, res) => {
   }
 };
 
-// ۲. دریافت یک سنسور
 export const getSensor = async (req, res) => {
   try {
     const sensor = await Sensor.findById(req.params.id)
@@ -70,28 +68,25 @@ export const createSensor = async (req, res) => {
       location,
       samplingIntervalSeconds
     } = req.body;
-    
-    // اعتبارسنجی ساده
+
     if (!type || !zone) {
       return res.status(400).json({
         status: 'error',
         message: 'نوع و زون الزامی هستند'
       });
     }
-    
-    // اگر soilMoisture هست و plant نداره
+
     if (type === 'soilMoisture' && !plant) {
       return res.status(400).json({
         status: 'error',
         message: 'سنسور رطوبت خاک باید برای یک گیاه خاص باشد'
       });
     }
-    
-    // ایجاد sensor data
+
     const sensorData = {
       type,
       zone,
-      plant: plant || undefined, // اگر خالی بود undefined بذار
+      plant: plant || undefined,
       hardwareId: hardwareId || undefined,
       ipAddress: ipAddress || undefined,
       location: location || undefined,
@@ -103,18 +98,15 @@ export const createSensor = async (req, res) => {
     };
     
     console.log('📊 Sensor data to create:', sensorData);
-    
-    // ایجاد سنسور
+
     const sensor = await Sensor.create(sensorData);
-    
+
     console.log('✅ Sensor created:', sensor._id);
-    
-    // پاپوله کن
+
     const populatedSensor = await Sensor.findById(sensor._id)
       .populate('zone', 'name')
       .populate('plant', 'name type');
 
-    // 🔐 ثبت در لاگ فعالیت‌ها
     await createAuditLog({
       req,
       actionType: 'SENSOR_CREATE',
@@ -138,8 +130,7 @@ export const createSensor = async (req, res) => {
     
   } catch (error) {
     console.error('❌ Error creating sensor:', error);
-    
-    // خطاهای خاص
+
     if (error.code === 11000) {
       return res.status(400).json({
         status: 'error',
@@ -163,7 +154,6 @@ export const createSensor = async (req, res) => {
   }
 };
 
-// ۴. آپدیت مقدار سنسور
 export const updateSensorValue = async (req, res) => {
   try {
     const { id } = req.params;
@@ -220,7 +210,6 @@ export const updateSensorValue = async (req, res) => {
   }
 };
 
-// ۵. شبیه‌سازی خواندن
 export const simulateSensorUpdate = async (req, res) => {
   try {
     const { id } = req.params;
@@ -282,7 +271,6 @@ export const simulateSensorUpdate = async (req, res) => {
   }
 };
 
-// ۶. شبیه‌سازی اتصال
 export const simulateConnection = async (req, res) => {
   try {
     const { id } = req.params;
@@ -336,7 +324,6 @@ export const simulateConnection = async (req, res) => {
   }
 };
 
-// ۷. اطلاعات فنی
 export const getSensorMetrics = async (req, res) => {
   try {
     const { id } = req.params;
@@ -375,7 +362,6 @@ export const getSensorMetrics = async (req, res) => {
   }
 };
 
-// ۸. سنسورهای یک گیاه
 export const getPlantSensors = async (req, res) => {
   try {
     const { plantId } = req.params;
@@ -398,7 +384,6 @@ export const getPlantSensors = async (req, res) => {
   }
 };
 
-// ۹. سنسورهای عمومی یک زون
 export const getZoneSensors = async (req, res) => {
   try {
     const { zoneId } = req.params;
@@ -422,7 +407,6 @@ export const getZoneSensors = async (req, res) => {
   }
 };
 
-// ۱۰. شروع شبیه‌ساز
 export const startSimulation = async (req, res) => {
   try {
     res.status(200).json({
@@ -439,7 +423,6 @@ export const startSimulation = async (req, res) => {
   }
 };
 
-// ۱۱. توقف شبیه‌ساز
 export const stopSimulation = async (req, res) => {
   try {
     res.status(200).json({

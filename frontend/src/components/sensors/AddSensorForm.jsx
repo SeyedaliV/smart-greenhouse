@@ -17,7 +17,6 @@ const AddSensorForm = ({ zone, plants, onClose, onSuccess }) => {
 
   const zonePlants = zone?.plants || [];
 
-  // دیباگ برای اطمینان
   useEffect(() => {
     console.log('🌟 Zone object:', zone);
     console.log('🎯 zone.plants directly:', zonePlants);

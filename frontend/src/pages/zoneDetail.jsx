@@ -32,22 +32,19 @@ const ZoneDetail = () => {
   const fetchZoneDetail = async () => {
     try {
       setLoading(true);
-      
-      // ۱. گرفتن داده‌ها
+
       const [zoneResponse, devicesResponse, sensorsResponse] = await Promise.all([
         zonesService.getOne(zoneId),
         devicesService.getAll(),
         sensorsService.getAll()
       ]);
 
-      // ۲. پردازش zone
       const zoneData = zoneResponse.data?.zone || zoneResponse;
       setZone(zoneData);
       
       const zoneIdStr = zoneData._id.toString();
       console.log('📍 Zone ID (string):', zoneIdStr);
 
-      // ۳. پردازش دستگاه‌ها
       if (devicesResponse?.data?.devices) {
         const zoneDevices = devicesResponse.data.devices.filter(device => {
           const deviceZoneId = device.zone?._id || device.zone;
@@ -57,42 +54,32 @@ const ZoneDetail = () => {
         console.log('🔌 Zone devices found:', zoneDevices.length);
       }
 
-      // ۴. پردازش سنسورها - مهم!
       console.log('📡 Raw sensors response:', sensorsResponse);
-      
-      // استخراج آرایه سنسورها از response
+
       let allSensors = [];
       
       if (sensorsResponse?.data?.sensors) {
-        // حالت: { data: { sensors: [...] } }
         allSensors = sensorsResponse.data.sensors;
       } else if (sensorsResponse?.data && Array.isArray(sensorsResponse.data)) {
-        // حالت: { data: [...] }
         allSensors = sensorsResponse.data;
       } else if (Array.isArray(sensorsResponse)) {
-        // حالت: [...]
         allSensors = sensorsResponse;
       } else if (sensorsResponse?.sensors) {
-        // حالت: { sensors: [...] }
         allSensors = sensorsResponse.sensors;
       }
       
       console.log('📊 All sensors extracted:', allSensors.length);
 
-      // فیلتر کردن سنسورهای این zone
       const zoneSensors = allSensors.filter(sensor => {
         if (!sensor) return false;
-        
-        // گرفتن zone ID سنسور به هر شکل ممکن
+
         const sensorZoneId = sensor.zone?._id || sensor.zone || sensor.zoneId;
-        
-        // اگر zone ID نداره، ردش کن
+
         if (!sensorZoneId) {
           console.log('⚠️ Sensor has no zone:', sensor._id);
           return false;
         }
-        
-        // تبدیل به string برای مقایسه
+
         const sensorZoneStr = sensorZoneId.toString();
         const isMatch = sensorZoneStr === zoneIdStr;
         
@@ -551,8 +538,7 @@ const ZoneDetail = () => {
               <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 p-3 gap-4">
                 {zone.plants.map((plant) => {
                   const plantStatus = getPlantStatus(plant);
-                  
-                  // گیاه رو با daysUntilHarvest آپدیت شده به PlantStatusCard پاس بده
+
                   const plantWithHarvest = {
                     ...plant,
                     daysUntilHarvest: plantStatus.daysUntilHarvest

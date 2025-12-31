@@ -23,7 +23,7 @@ const computeDrift = (current, min, max) => {
   const smallStep = span * 0.02;
   const bigStep = span * 0.15;
 
-  const outOfRangeChance = 0.1; // 10% احتمال رفتن بیرون از رنج
+  const outOfRangeChance = 0.1; // 10% chance of going out of range
   const r = Math.random();
 
   if (r < outOfRangeChance) {
@@ -84,7 +84,6 @@ const tickSensor = async (sensorId) => {
   const sensor = await Sensor.findById(sensorId).populate('zone').populate('plant');
   if (!sensor) return;
 
-  // اگر سنسور خاموش یا باتری خالی است، داده جدیدی ارسال نکن
   if (sensor.status !== 'active' || sensor.connectionStatus === 'disconnected' || sensor.batteryLevel <= 0) {
     return;
   }

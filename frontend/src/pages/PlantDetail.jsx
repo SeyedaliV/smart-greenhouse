@@ -168,7 +168,6 @@ const PlantDetail = () => {
 
   return (
     <div className="space-y-6">
-      {/* هدر */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <GoBackBtn />
@@ -203,7 +202,6 @@ const PlantDetail = () => {
       </div>
 
       <div className="flex-col">
-        {/* سایدبار اطلاعات */}
         <div className="flex gap-6 mb-6">
           <div className="bg-white w-full dark:bg-zinc-800 rounded-xl border border-zinc-200 dark:border-zinc-700">
           <h3 className="text-lg p-3 border-b border-zinc-200 dark:border-zinc-700 flex items-center font-semibold text-zinc-900 dark:text-white"><div className="size-8 rounded-md bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
@@ -244,7 +242,6 @@ const PlantDetail = () => {
             </div>
           </div>
 
-          {/* وضعیت برداشت */}
           <div className="bg-white w-full dark:bg-zinc-800 rounded-xl border border-zinc-200 dark:border-zinc-700">
           <h3 className="text-lg p-3 border-b border-zinc-200 dark:border-zinc-700 flex items-center font-semibold text-zinc-900 dark:text-white"><div className="size-8 rounded-md bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
           <Shovel size={20} className="text-amber-700 dark:text-amber-400" /></div><span className="ml-2">Harvest Status</span></h3>
@@ -273,9 +270,7 @@ const PlantDetail = () => {
           </div>
         </div>
 
-        {/* محتوای اصلی */}
         <div className="lg:col-span-2 space-y-6">
-          {/* وضعیت فعلی */}
           <div className="bg-white dark:bg-zinc-800 rounded-xl border border-zinc-200 dark:border-zinc-700">
             <div className="flex justify-between border-b border-zinc-200 dark:border-zinc-700 items-center">
               <h3 className="flex p-3 items-center space-x-1 text-lg font-semibold text-zinc-900 dark:text-white">
@@ -400,7 +395,6 @@ const PlantDetail = () => {
             )}
           </div>
 
-          {/* اطلاعات رشد */}
           <div className="bg-white dark:bg-zinc-800 rounded-xl border border-zinc-200 dark:border-zinc-700">
             <div className="flex justify-between p-3 border-b border-zinc-200 dark:border-zinc-700 items-center">
               <h3 className="flex items-center space-x-1 text-lg font-semibold text-zinc-900 dark:text-white">
@@ -463,7 +457,7 @@ const PlantDetail = () => {
           plant={plant}
           onClose={() => setShowAddSensor(false)}
           onSuccess={() => {
-            fetchPlantDetail(); // یا هر تابعی که داری
+            fetchPlantDetail();
             setShowAddSensor(false);
           }}
         />

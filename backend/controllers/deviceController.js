@@ -121,7 +121,7 @@ export const createDevice = async (req, res) => {
     const zoneMap = {};
 
     for (let i = 0; i < 26; i++) {
-      const letter = String.fromCharCode(65 + i); // A تا Z
+      const letter = String.fromCharCode(65 + i);
       zoneMap[`Zone ${letter}`] = `Z${letter}`;
     }
 

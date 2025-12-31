@@ -28,8 +28,8 @@ const Devices = () => {
         devicesService.getAll(),
         zonesService.getAll()
       ]);
-      console.log('📦 Devices API response:', devicesData); // برای دیباگ
-      console.log('📦 Zones API response:', zonesData); // برای دیباگ
+      console.log('📦 Devices API response:', devicesData);
+      console.log('📦 Zones API response:', zonesData);
       setDevices(devicesData.data.devices);
       setZones(zonesData);
     } catch (err) {
@@ -43,7 +43,7 @@ const Devices = () => {
   const fetchDevices = async () => {
     try {
       const data = await devicesService.getAll();
-      console.log('📦 Devices API response:', data); // برای دیباگ
+      console.log('📦 Devices API response:', data);
       setDevices(data.data.devices);
     } catch (err) {
       setError('Failed to load devices');
@@ -56,7 +56,6 @@ const Devices = () => {
       console.log('🔧 Controlling device:', deviceId, '→', newStatus);
       await devicesService.control(deviceId, { status: newStatus });
 
-      // آپدیت local state
       setDevices(prevDevices =>
         prevDevices.map(device =>
           (device.id === deviceId || device._id === deviceId)
@@ -105,7 +104,6 @@ const Devices = () => {
 
   return (
     <div className="space-y-6">
-    {/* هدر صفحه */}
     <div className="flex justify-between items-center">
       <div>
         <h1 className="text-3xl font-bold text-zinc-900 dark:text-white flex items-center gap-2">
@@ -123,7 +121,6 @@ const Devices = () => {
           Add Device
         </button>
 
-        {/* فیلتر Zone */}
         <select
           value={selectedZone}
           onChange={(e) => setSelectedZone(e.target.value)}
@@ -142,12 +139,10 @@ const Devices = () => {
         </div>
       </div>
     </div>
-    
 
-    {/* آمار مصرف برق */}
+
     <PowerConsumption devices={devices} />
 
-    {/* شبکه دستگاه‌ها */}
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
       {filteredDevices.map((device, index) => (
         <DeviceCard
@@ -159,7 +154,6 @@ const Devices = () => {
       ))}
     </div>
 
-    {/* پیام خالی */}
     {devices.length === 0 && (
       <div className="text-center py-12 bg-white dark:bg-zinc-800 rounded-xl border dark:border-zinc-700">
         <div className="text-zinc-400 text-6xl mb-4">🔧</div>

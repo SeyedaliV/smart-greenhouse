@@ -77,12 +77,10 @@ const ZoneCard = ({ zone }) => {
         </span>
       </div>
 
-      {/* آمار سریع - حالا ۳ آیتم */}
       <div className="grid grid-cols-3 gap-3 mb-4">
         <div className="text-center p-3 bg-white dark:bg-zinc-800 rounded-lg border border-zinc-100 dark:border-zinc-700">
           <Leaf size={18} className="mx-auto text-green-500 mb-1" />
           <div className="text-lg font-bold text-zinc-900 dark:text-white">
-            {/* اولویت با plantCount که از بک‌اند می‌آید، در غیر اینصورت طول آرایه plants */}
             {zone.plantCount ?? (zone.plants?.length || 0)}
           </div>
           <div className="text-xs text-zinc-500 dark:text-gray-400">Plants</div>
@@ -103,7 +101,6 @@ const ZoneCard = ({ zone }) => {
         </div>
       </div>
 
-      {/* وضعیت عمومی محیط براساس سنسورهای عمومی زون */}
       <div className="flex-col space-y-2">
         <h4 className="text-sm font-medium text-zinc-700 dark:text-gray-300 mb-2">General Status:</h4>
         <div className='flex justify-between space-x-3'>
@@ -149,7 +146,6 @@ const ZoneCard = ({ zone }) => {
         </div>
       </div>
 
-      {/* دکمه مشاهده */}
       <div className="mt-4 pt-4 border-t border-zinc-200 dark:border-zinc-700">
         <div className="flex items-center justify-center text-green-600 dark:text-green-500 hover:text-green-700 dark:hover:text-green-400 font-medium text-sm">
           <MapPin size={16} className="mr-1" />

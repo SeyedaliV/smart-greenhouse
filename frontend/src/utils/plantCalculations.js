@@ -1,6 +1,3 @@
-// محاسبات مربوط به گیاهان
-
-// محاسبه daysUntilHarvest
 export const calculateDaysUntilHarvest = (plant) => {
   let daysUntilHarvest;
   
@@ -25,7 +22,6 @@ export const calculateDaysUntilHarvest = (plant) => {
   return daysUntilHarvest;
 };
 
-// گرفتن وضعیت harvest
 export const getHarvestStatus = (daysUntilHarvest) => {
   if (daysUntilHarvest === 'N/A') {
     return { text: 'N/A', color: 'text-zinc-600', badgeColor: 'bg-zinc-100 text-zinc-800' };
@@ -42,7 +38,6 @@ export const getHarvestStatus = (daysUntilHarvest) => {
   return { text: `${daysUntilHarvest} days`, color: 'text-blue-600', badgeColor: 'bg-blue-100 text-blue-800' };
 };
 
-// محاسبه تاریخ harvest
 export const calculateHarvestDate = (plant) => {
   if (plant.estimatedHarvestDate) {
     return new Date(plant.estimatedHarvestDate);
@@ -58,7 +53,6 @@ export const calculateHarvestDate = (plant) => {
   return null;
 };
 
-// گرفتن وضعیت کامل گیاه
 export const getPlantStatus = (plant) => {
   const daysUntilHarvest = calculateDaysUntilHarvest(plant);
   const harvestStatus = getHarvestStatus(daysUntilHarvest);

@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { X, Thermometer, Droplets, Sprout, Sun, Cpu, Globe } from 'lucide-react';
 import { sensorsService } from '../../services/api';
 
-const AddSensor = ({ 
-  zone,          // زون گیاه
-  plant,         // گیاه کامل (object) - فقط در PlantDetail پاس داده می‌شه
-  onClose, 
-  onSuccess 
+const AddSensor = ({
+  zone,
+  plant,
+  onClose,
+  onSuccess
 }) => {
   const [formData, setFormData] = useState({
     type: 'temperature',
@@ -19,18 +19,14 @@ const AddSensor = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // اگر plant پاس داده شده باشه، یعنی در PlantDetail هستیم → گیاه ثابت
   const isPlantFixed = !!plant;
 
-  // اگر در PlantDetail هستیم، plant رو خودکار ست کن
   useEffect(() => {
     if (isPlantFixed && plant?._id) {
-      // نیازی به ست کردن در formData نیست، چون مستقیم می‌فرستیم
       console.log('🌱 Fixed plant for sensor:', plant.name);
     }
   }, [isPlantFixed, plant]);
 
-  // تولید MAC و IP تصادفی
   const generateRandomMAC = () => {
     const hex = '0123456789ABCDEF';
     let mac = '';
@@ -65,7 +61,6 @@ const AddSensor = ({
     setError('');
 
     try {
-      // اعتبارسنجی ساده
       if (!zone?._id) {
         throw new Error('Zone information is missing');
       }
@@ -73,7 +68,7 @@ const AddSensor = ({
       const sensorData = {
         type: formData.type,
         zone: zone._id,
-        plant: isPlantFixed ? plant._id : null,  // مستقیم گیاه فعلی
+        plant: isPlantFixed ? plant._id : null,
         hardwareId: formData.hardwareId || undefined,
         ipAddress: formData.ipAddress || undefined,
         location: formData.location || undefined,
@@ -186,7 +181,6 @@ const AddSensor = ({
                 </div>
               </div>
 
-              {/* Plant Info (اگر گیاه ثابت باشد) */}
               {isPlantFixed && plant && (
                 <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
                   <div className="flex items-center">

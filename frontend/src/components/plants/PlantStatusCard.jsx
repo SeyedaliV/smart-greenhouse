@@ -43,7 +43,6 @@ const PlantStatusCard = ({ plant }) => {
   return (
     <Link to={`/plants/${plant._id || plant.id}`} className="block group">
       <div className="bg-white dark:bg-zinc-900 border-2 border-zinc-200 dark:border-zinc-700 rounded-lg p-4 transition-all duration-200 group-hover:border-green-300 dark:group-hover:border-green-600 h-full">
-        {/* هدر کارت */}
         <div className="flex items-start justify-between mb-3">
           <div className="flex items-center">
             <div>
@@ -58,7 +57,6 @@ const PlantStatusCard = ({ plant }) => {
           </span>
         </div>
 
-        {/* آمار فعلی - با humidity */}
         <div className="space-y-2 text-sm mb-4">
           <div className="flex justify-between items-center">
             <span className="text-zinc-600 dark:text-zinc-400 flex items-center gap-2">
@@ -121,7 +119,6 @@ const PlantStatusCard = ({ plant }) => {
           </div>
         </div>
 
-        {/* وضعیت برداشت */}
         <div className={`mt-4 pt-3 border-t ${getHarvestColor(plant.daysUntilHarvest)} border rounded-lg p-2 dark:border-zinc-600`}>
           <div className="flex justify-between items-center">
             <div className="flex items-center">
@@ -136,8 +133,7 @@ const PlantStatusCard = ({ plant }) => {
               {getHarvestText(plant.daysUntilHarvest)}
             </span>
           </div>
-          
-          {/* نوار پیشرفت برداشت */}
+
           {plant.daysUntilHarvest > 0 && (
             <div className="mt-2">
               <div className="w-full bg-zinc-200 dark:bg-zinc-700 rounded-full h-1.5">
@@ -152,7 +148,6 @@ const PlantStatusCard = ({ plant }) => {
           )}
         </div>
 
-        {/* دکمه مشاهده جزئیات */}
         <div className="mt-3 pt-2 border-t border-zinc-100 dark:border-zinc-700">
           <div className="text-center">
             <span className="text-green-600 dark:text-green-500 text-xs font-medium group-hover:text-green-700 dark:group-hover:text-green-400 transition-colors">

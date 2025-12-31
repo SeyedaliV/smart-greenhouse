@@ -4,13 +4,10 @@ import Device from '../models/deviceModel.js';
 import Sensor from '../models/sensorModel.js';
 import { createAuditLog } from './auditLogController.js';
 
-// دریافت همه زون‌ها به همراه تعداد دقیق گیاهان هر زون
 export const getZones = async (req, res) => {
   try {
-    // همه‌ی زون‌ها را بگیر
     const zones = await Zone.find().lean();
 
-    // 📊 یک‌بار برای همه زون‌ها، سنسورهای عمومی (بدون plant) را گروه‌بندی کن
     const sensorAggregates = await Sensor.aggregate([
       {
         $match: {
@@ -36,7 +33,6 @@ export const getZones = async (req, res) => {
       envByZone.get(zoneId)[type] = Math.round(entry.avgValue * 10) / 10;
     });
 
-    // برای هر زون تعداد گیاهان، دستگاه‌ها و سنسورها را حساب کن و وضعیت و میانگین سنسورها را اضافه کن
     const zonesWithCounts = await Promise.all(
       zones.map(async (zone) => {
         const plantCount = await Plant.countDocuments({ zone: zone._id });
@@ -45,7 +41,6 @@ export const getZones = async (req, res) => {
 
         const env = envByZone.get(zone._id.toString()) || {};
 
-        // وضعیت محاسبه‌شده: اگر هیچ گیاهی ندارد، inactive
         const derivedStatus = plantCount === 0 ? 'inactive' : zone.status;
 
         return {
@@ -70,12 +65,10 @@ export const getZones = async (req, res) => {
   }
 };
 
-// ایجاد زون جدید با دستگاه‌ها و سنسورها
 export const createZone = async (req, res) => {
   try {
     const { plantType } = req.body;
 
-    // اعتبارسنجی ورودی
     if (!plantType) {
       return res.status(400).json({
         status: 'error',
@@ -496,8 +489,6 @@ export const createZone = async (req, res) => {
 
     const config = defaultSettings[plantType] || defaultSettings.default;
     const { description, settings } = config;
-
-    // ایجاد زون
     const newZone = await Zone.create({
       name: zoneName,
       plantType,
@@ -516,20 +507,17 @@ export const createZone = async (req, res) => {
   }
 };
 
-// دریافت اطلاعات کامل یک زون
 export const getZoneById = async (req, res) => {
   try {
     const zone = await Zone.findById(req.params.id);
-    
+
     if (!zone) {
       return res.status(404).json({ message: 'Zone not found' });
     }
-    
-    // گیاهان این زون رو جداگانه بگیر
+
     const plants = await Plant.find({ zone: req.params.id })
       .select('name type status currentStats plantingDate estimatedHarvestDate daysToMature optimalConditions');
 
-    // 📊 میانگین سنسورهای عمومی این زون (بدون plant)
     const sensorEnvAggregates = await Sensor.aggregate([
       {
         $match: {
@@ -575,7 +563,6 @@ export const getZoneById = async (req, res) => {
   }
 };
 
-// دریافت گیاهان یک زون
 export const getZonePlants = async (req, res) => {
   try {
     const plants = await Plant.find({ zone: req.params.id })
@@ -587,19 +574,16 @@ export const getZonePlants = async (req, res) => {
   }
 };
 
-// حذف زون
 export const deleteZone = async (req, res) => {
   try {
     const { id: zoneId } = req.params;
     console.log('🗑️ Attempting to delete zone with ID:', zoneId);
 
-    // اول دستگاه‌ها، سنسورها و گیاهان مربوط به این زون رو حذف کن
     const deletedDevices = await Device.deleteMany({ zone: zoneId });
     const deletedSensors = await Sensor.deleteMany({ zone: zoneId });
     const deletedPlants = await Plant.deleteMany({ zone: zoneId });
     console.log(`🗑️ Deleted ${deletedDevices.deletedCount} devices, ${deletedSensors.deletedCount} sensors, and ${deletedPlants.deletedCount} plants`);
 
-    // حالا خود زون رو حذف کن
     const zone = await Zone.findByIdAndDelete(zoneId);
 
     if (!zone) {
@@ -640,7 +624,6 @@ export const deleteZone = async (req, res) => {
   }
 };
 
-// ایجاد داده اولیه برای زون‌ها
 export const seedZones = async (_, res) => {
   try {
     const zonesData = [

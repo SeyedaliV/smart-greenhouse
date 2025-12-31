@@ -123,8 +123,7 @@ export const Seed = async (req, res) => {
       const plantType = plantTypes[zone.name];
       const names = plantNames[plantType];
       const daysToMature = daysToMatureMap[plantType];
-      
-      // ایجاد ۲ تا ۳ گیاه در هر زون
+
       const plantCount = Math.floor(Math.random() * 2) + 2; // 2 or 3 plants
       
       for (let i = 0; i < plantCount; i++) {
@@ -132,7 +131,6 @@ export const Seed = async (req, res) => {
         const estimatedHarvestDate = new Date(plantingDate);
         estimatedHarvestDate.setDate(estimatedHarvestDate.getDate() + daysToMature);
 
-        // ایجاد داده‌های واقعی برای گیاه
         const tempVariation = (Math.random() * 4 - 2); // ±2°C
         const humidityVariation = (Math.random() * 10 - 5); // ±5%
         const soilVariation = (Math.random() * 8 - 4); // ±4%
@@ -187,26 +185,25 @@ export const Seed = async (req, res) => {
     for (const zone of zones) {
       for (const sensorConfig of sensorTypes) {
         const baseValue = zone.settings[sensorConfig.type]?.optimal || 50;
-        
-        // ایجاد داده‌های واقعی و تمیز برای سنسورها
+
         let currentValue;
         
         switch(sensorConfig.type) {
           case 'temperature':
             currentValue = baseValue + (Math.random() * 4 - 2); // ±2°C
-            currentValue = Math.round(currentValue * 10) / 10; // یک رقم اعشار
+            currentValue = Math.round(currentValue * 10) / 10; // one decimal place
             break;
           case 'humidity':
             currentValue = baseValue + (Math.random() * 10 - 5); // ±5%
-            currentValue = Math.round(currentValue); // عدد صحیح
+            currentValue = Math.round(currentValue);
             break;
           case 'soilMoisture':
             currentValue = baseValue + (Math.random() * 8 - 4); // ±4%
-            currentValue = Math.round(currentValue); // عدد صحیح
+            currentValue = Math.round(currentValue);
             break;
           case 'light':
             currentValue = baseValue + (Math.random() * 200 - 100); // ±100 lux
-            currentValue = Math.round(currentValue / 10) * 10; // مضرب ۱۰
+            currentValue = Math.round(currentValue / 10) * 10; // multiple of 10
             break;
           default:
             currentValue = Math.round(baseValue);

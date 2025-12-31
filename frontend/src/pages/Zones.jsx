@@ -1,4 +1,3 @@
-// frontend/pages/Zones.jsx (یا هر جایی که هست)
 import { useState, useEffect } from 'react';
 import { zonesService } from '../services/api';
 import ZoneCard from '../components/zones/ZoneCard';
@@ -19,7 +18,6 @@ const Zones = () => {
     try {
       setLoading(true);
       const response = await zonesService.getAll();
-      // مطمئن شو ساختار درست باشه
       const zonesData = response.data?.zones || response || [];
       setZones(zonesData);
     } catch (error) {
@@ -29,10 +27,9 @@ const Zones = () => {
     }
   };
 
-  // 🔥 این تابع رو تغییر دادم – حالا دوباره fetch می‌کنه
   const handleZoneCreated = async () => {
-    await fetchZones(); // دوباره همه زون‌ها رو از بک‌اند بگیر
-    setShowCreateModal(false); // فرم رو ببند
+    await fetchZones();
+    setShowCreateModal(false);
   };
 
   if (loading && zones.length === 0) {
@@ -72,7 +69,7 @@ const Zones = () => {
       {showCreateModal && (
         <ZoneForm
           onClose={() => setShowCreateModal(false)}
-          onSave={handleZoneCreated}  // <-- این حالا fetchZones رو صدا می‌زنه
+          onSave={handleZoneCreated}
         />
       )}
     </div>

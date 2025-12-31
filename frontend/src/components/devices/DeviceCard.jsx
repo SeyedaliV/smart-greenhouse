@@ -78,9 +78,7 @@ const DeviceCard = ({ device, onControl, onDelete }) => {
         </span>
       </div>
 
-      {/* اطلاعات دستگاه */}
       <div className="space-y-3 mb-6">
-        {/* Zone Information */}
         <div className="flex justify-between text-sm">
           <span className="text-zinc-600 dark:text-gray-400">Zone:</span>
           <span className="font-medium text-zinc-700 dark:text-gray-300">{device.zone?.name || device.zone || 'Not assigned'}</span>
@@ -109,7 +107,6 @@ const DeviceCard = ({ device, onControl, onDelete }) => {
         </div>
       </div>
 
-      {/* کنترل‌ها */}
       <div className="space-y-3">
         <label className="block text-sm font-medium text-zinc-700 dark:text-gray-300 mb-2">
           Control Device:
@@ -140,7 +137,6 @@ const DeviceCard = ({ device, onControl, onDelete }) => {
         </div>
       </div>
 
-      {/* وضعیت بارگذاری */}
       {isLoading && (
         <div className="mt-4 text-center">
           <div className="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-green-500"></div>

@@ -44,7 +44,6 @@ export const getDashboardData = async (req, res) => {
       plantingDate: plant.plantingDate,
       daysToMature: plant.daysToMature,
       estimatedHarvestDate: plant.estimatedHarvestDate,
-      // استفاده از متد مدل برای محاسبه‌ی واقعی روزهای مانده تا برداشت
       daysUntilHarvest:
         typeof plant.getDaysUntilHarvest === 'function'
           ? plant.getDaysUntilHarvest()

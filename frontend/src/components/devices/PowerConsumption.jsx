@@ -4,8 +4,7 @@ const PowerConsumption = ({ devices }) => {
     const totalPower = activeDevices.reduce((sum, device) => 
       sum + (device.powerConsumption || 0), 0
     );
-    
-    // محاسبه هزینه تقریبی (فرض: ۰.۲ دلار per kWh)
+
     const hourlyCost = (totalPower * 0.2) / 1000;
     const dailyCost = hourlyCost * 24;
     const monthlyCost = dailyCost * 30;

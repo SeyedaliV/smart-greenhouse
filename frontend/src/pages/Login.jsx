@@ -23,8 +23,8 @@ const Login = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // این خط رو حتماً اضافه کن!
-    
+    e.preventDefault();
+
     if (!formData.username || !formData.password) {
       setError('Please fill in all fields');
       return;
@@ -37,7 +37,7 @@ const Login = () => {
       const result = await login(formData.username, formData.password);
       
       if (result.success) {
-        navigate('/'); // به دشبورد هدایت بشه
+        navigate('/');
       } else {
         setError(result.error || 'Login failed');
       }
@@ -51,7 +51,6 @@ const Login = () => {
   return (
     <div className="min-h-screen bg-linear-to-br from-green-50 to-blue-50 flex items-center justify-center">
       <div className="bg-white p-8 rounded-2xl shadow-xl w-96">
-        {/* لوگو */}
         <div className="text-center mb-8">
           <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <span className="text-2xl text-emerald-700"><Flower size={40} /></span>
@@ -60,14 +59,12 @@ const Login = () => {
           <p className="text-zinc-600">Smart Farming Dashboard</p>
         </div>
 
-        {/* نمایش خطا */}
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg mb-4 text-sm">
             {error}
           </div>
         )}
 
-        {/* فرم لاگین */}
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label className="block text-sm font-medium text-zinc-700 mb-2">

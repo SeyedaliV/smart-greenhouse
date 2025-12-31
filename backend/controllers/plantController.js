@@ -1,14 +1,11 @@
-// backend/controllers/plantController.js
 import Plant from '../models/plantModel.js';
-import Sensor from '../models/sensorModel.js'; // اضافه کن اگر نداری
+import Sensor from '../models/sensorModel.js';
 import { createAuditLog } from './auditLogController.js';
 
-// GET /api/plants - همه گیاهان
 export const getAllPlants = async (req, res) => {
   try {
     const plants = await Plant.find().populate('zone');
 
-    // 📊 محاسبه‌ی میانگین سنسورهای هر گیاه (بر اساس سنسورهای اختصاص داده شده به آن گیاه)
     const sensorAverages = await Sensor.aggregate([
       {
         $match: {
@@ -66,7 +63,6 @@ export const getAllPlants = async (req, res) => {
   }
 };
 
-// GET /api/plants/:id - جزئیات یک گیاه + سنسورهای متصل به آن
 export const getPlant = async (req, res) => {
   try {
     const plant = await Plant.findById(req.params.id).populate('zone');
@@ -78,7 +74,6 @@ export const getPlant = async (req, res) => {
       });
     }
 
-    // تنظیمات بهینه برای گیاهان قدیمی (اگر optimalConditions وجود نداشت)
     const defaultConditions = {
       tomato: { 
         temperature: { min: 22, max: 28, optimal: 25 },
@@ -127,10 +122,9 @@ export const getPlant = async (req, res) => {
         light: conditions.light
       };
       plant.daysToMature = conditions.daysToMature;
-      await plant.save(); // اختیاری: ذخیره کن تا دفعه بعد نیازی نباشه
+      await plant.save();
     }
 
-    // 🔥 سنسورهای متصل به این گیاه رو بگیر (با اطلاعات کامل برای UI)
     const sensors = await Sensor.find({ plant: plant._id })
       .populate('zone', 'name')
       .populate('plant', 'name type')
@@ -140,7 +134,7 @@ export const getPlant = async (req, res) => {
       status: 'success',
       data: {
         plant,
-        sensors // اینو اضافه کردیم – دقیقاً چیزی که فرانت‌اند نیاز داره!
+        sensors
       }
     });
   } catch (error) {
@@ -152,7 +146,6 @@ export const getPlant = async (req, res) => {
   }
 };
 
-// POST /api/plants - ایجاد گیاه جدید
 export const createPlant = async (req, res) => {
   try {
     const plant = await Plant.create(req.body);
@@ -179,7 +172,6 @@ export const createPlant = async (req, res) => {
   }
 };
 
-// PATCH /api/plants/:id - آپدیت گیاه
 export const updatePlant = async (req, res) => {
   try {
     const plant = await Plant.findByIdAndUpdate(req.params.id, req.body, {
@@ -216,7 +208,6 @@ export const updatePlant = async (req, res) => {
   }
 };
 
-// DELETE /api/plants/:id - حذف گیاه
 export const deletePlant = async (req, res) => {
   try {
     const plant = await Plant.findByIdAndDelete(req.params.id);
