@@ -42,7 +42,7 @@ const showToast = ({
         </div>
         <button
           onClick={() => toast.dismiss(t.id)}
-          className="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200"
+          className="size-5 rounded flex justify-center duration-75 items-center hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200"
           aria-label="Close toast"
         >
           <X size={16} />

@@ -9,7 +9,7 @@ const StatCard = ({ title, value, subtitle, icon, color = 'green' }) => {
   };
 
   return (
-    <div className="bg-whit grow dark:bg-zinc-800 rounded-xl border-zinc-200 dark:border-zinc-700 p-6 border">
+    <div className="bg-white grow dark:bg-zinc-800 rounded-xl border-zinc-200 dark:border-zinc-700 p-6 border">
       <div className="flex items-center">
         <div className={`${colorClasses[color]} p-3 rounded-lg`}>
           <span className="text-white text-xl">{icon}</span>

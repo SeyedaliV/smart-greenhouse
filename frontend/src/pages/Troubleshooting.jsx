@@ -34,11 +34,11 @@ const getAlertIcon = (type) => {
 const getAlertColor = (type) => {
   switch (type) {
     case 'critical':
-      return 'border-red-200 bg-red-50';
+      return 'border-red-200 dark:border-red-800';
     case 'warning':
-      return 'border-yellow-200 bg-yellow-50';
+      return 'border-yellow-200 dark:border-yellow-800';
     default:
-      return 'border-blue-200 bg-blue-50';
+      return 'border-blue-200 dark:border-blue-800';
   }
 };
 
@@ -119,28 +119,96 @@ const Troubleshooting = () => {
   );
 
   const relatedDevices = useMemo(() => {
-    if (!relatedZoneName && !selectedAlert?.message) return devices;
-    return devices.filter(
-      (d) =>
-        d.zone === relatedZoneName ||
-        (selectedAlert?.message && selectedAlert.message.includes(d.name)),
-    );
+    if (!selectedAlert) return [];
+    const related = [];
+
+    // Filter devices by zone if alert mentions a zone
+    if (relatedZoneName) {
+      related.push(...devices.filter(d => d.zone === relatedZoneName));
+    }
+
+    // Filter devices mentioned in alert message
+    devices.forEach(device => {
+      if (selectedAlert.message && selectedAlert.message.includes(device.name)) {
+        if (!related.find(d => d._id === device._id)) {
+          related.push(device);
+        }
+      }
+    });
+
+    // If no specific devices found, show all devices in the related zone
+    if (related.length === 0 && relatedZoneName) {
+      return devices.filter(d => d.zone === relatedZoneName);
+    }
+
+    return related;
   }, [devices, relatedZoneName, selectedAlert]);
 
   const relatedSensors = useMemo(() => {
-    if (!relatedZoneName) return sensors;
-    return sensors.filter((s) => s.zone === relatedZoneName);
-  }, [sensors, relatedZoneName]);
+    if (!selectedAlert) return [];
+    const related = [];
+
+    // Filter sensors by zone if alert mentions a zone
+    if (relatedZoneName) {
+      related.push(...sensors.filter(s => s.zone === relatedZoneName));
+    }
+
+    // Filter sensors by type if alert mentions a sensor type
+    if (selectedAlert.metric) {
+      sensors.forEach(sensor => {
+        if (sensor.type === selectedAlert.metric) {
+          if (!related.find(s => s._id === sensor._id)) {
+            related.push(sensor);
+          }
+        }
+      });
+    }
+
+    // Filter sensors mentioned in alert message by type
+    sensors.forEach(sensor => {
+      if (selectedAlert.message) {
+        const message = selectedAlert.message.toLowerCase();
+        if (message.includes(sensor.type) || message.includes(sensor.name)) {
+          if (!related.find(s => s._id === sensor._id)) {
+            related.push(sensor);
+          }
+        }
+      }
+    });
+
+    return related;
+  }, [sensors, relatedZoneName, selectedAlert]);
 
   const relatedPlants = useMemo(() => {
-    if (!selectedAlert) return plants;
+    if (!selectedAlert) return [];
+    const related = [];
+
+    // Filter plants by type if alert mentions a plant type
     if (selectedAlert.plantType) {
-      return plants.filter((p) => p.type === selectedAlert.plantType);
+      related.push(...plants.filter(p => p.type === selectedAlert.plantType));
     }
+
+    // Filter plants by zone if alert mentions a zone
     if (relatedZone?._id) {
-      return plants.filter((p) => String(p.zone) === String(relatedZone._id));
+      plants.forEach(plant => {
+        if (String(plant.zone) === String(relatedZone._id)) {
+          if (!related.find(p => p._id === plant._id)) {
+            related.push(plant);
+          }
+        }
+      });
     }
-    return plants;
+
+    // Filter plants mentioned in alert message
+    plants.forEach(plant => {
+      if (selectedAlert.message && selectedAlert.message.includes(plant.name)) {
+        if (!related.find(p => p._id === plant._id)) {
+          related.push(plant);
+        }
+      }
+    });
+
+    return related;
   }, [plants, selectedAlert, relatedZone]);
 
   const handleDeviceControl = async (deviceId, newStatus) => {
@@ -224,7 +292,7 @@ const Troubleshooting = () => {
 
           <button
             onClick={() => navigate('/logs')}
-            className="mt-1 inline-flex items-center px-3 py-1 rounded-lg border border-zinc-200 dark:border-zinc-700 text-xs text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800"
+            className="mt-1 inline-flex items-center px-3 py-1 rounded border border-zinc-200 dark:border-zinc-700 text-xs text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800"
           >
             <Activity size={14} className="mr-1" />
             View full log
@@ -314,18 +382,18 @@ const Troubleshooting = () => {
         </div>
 
         {/* Troubleshooting panel */}
-        <div className="lg:col-span-2 space-y-4 w-full">
+        <div className="lg:col-span-2 space-y-3 w-full">
           {selectedAlert ? (
             <>
               {/* Selected alert header */}
               <div
-                className={`border rounded-xl p-4 bg-white dark:bg-zinc-800/40 ${getAlertColor(
+                className={`border rounded-xl p-3 bg-white dark:bg-zinc-800/40 ${getAlertColor(
                   selectedAlert.type,
                 )}`}
               >
                 <div className="flex items-start justify-between gap-3">
-                  <div className="flex items-start gap-3">
-                    <div className="mt-0.5">
+                  <div className="flex items-start">
+                    <div className="mt-0.5 mr-1.5">
                       {getAlertIcon(selectedAlert.type)}
                     </div>
                     <div>
@@ -345,14 +413,15 @@ const Troubleshooting = () => {
 
                   <div className="flex flex-col items-end gap-2">
                     {selectedAlert.value && (
-                      <span className="px-2 py-1 rounded border border-zinc-300 bg-white text-xs font-mono text-zinc-900">
+                      <span className="px-2 py-1 rounded border border-zinc-200 dark:border-zinc-700 dark:bg-zinc-800/40
+                      bg-white text-xs font-mono text-zinc-900 dark:text-zinc-300">
                         {selectedAlert.value}
                       </span>
                     )}
                     <button
                       type="button"
                       onClick={() => handleResolveAlert(selectedIndex)}
-                      className="px-3 py-1.5 rounded-lg bg-green-600 text-white text-xs hover:bg-green-700 flex items-center gap-1"
+                      className="px-3 py-1.5 rounded bg-green-600 text-white text-xs hover:bg-green-700 flex items-center gap-1"
                     >
                       <ShieldCheck size={14} />
                       Resolve alert
@@ -361,9 +430,9 @@ const Troubleshooting = () => {
                 </div>
               </div>
 
-              {/* Context: Zone & environment */}
+              Context: Zone & environment
               {relatedZone && (
-                <div className="bg-white dark:bg-zinc-800/40 border border-zinc-200 dark:border-zinc-700 rounded-xl p-4">
+                <div className="bg-white dark:bg-zinc-800/40 border border-zinc-200 dark:border-zinc-700 rounded-xl p-3">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2">
                       <Activity size={18} className="text-blue-500" />
@@ -431,25 +500,25 @@ const Troubleshooting = () => {
               {/* IoT control panel */}
               <div className="grid gap-3">
                 {/* Devices control */}
-                <div className="bg-white h-auto dark:bg-zinc-800/40 border border-zinc-200 dark:border-zinc-700 rounded-xl p-4">
-                  <div className="flex items-center justify-between mb-3">
+                <div className="bg-white h-auto dark:bg-zinc-800/40 border border-zinc-200 dark:border-zinc-700 rounded-xl">
+                  <div className="flex p-3 border-b border-zinc-200 dark:border-zinc-700 items-center justify-between mb-3">
                     <div className="flex items-center gap-2">
                       <Power size={18} className="text-blue-500" />
                       <h3 className="font-semibold text-sm text-zinc-900 dark:text-zinc-100">
                         Devices control
                       </h3>
                     </div>
-                    <span className="text-[11px] text-zinc-500">
+                    <span className="text-xs text-zinc-500">
                       {relatedDevices.length} devices
                     </span>
                   </div>
 
                   {relatedDevices.length === 0 ? (
-                    <p className="text-xs text-zinc-500">
+                    <p className="flex justify-center items-center text-sm pb-6 pt-3 text-zinc-500">
                       No devices associated with this alert.
                     </p>
                   ) : (
-                    <div className="space-y-2 grid grid-cols-2 max-h-64 overflow-y-auto">
+                    <div className="space-y-2 p-3 grid grid-cols-2 max-h-64 overflow-y-auto">
                       {relatedDevices.map((device) => (
                         <div
                           key={device.id || device._id}
@@ -517,27 +586,27 @@ const Troubleshooting = () => {
                 </div>
 
                 {/* Sensor & plant context */}
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {/* Sensors */}
-                  <div className="bg-white dark:bg-zinc-800/40 border border-zinc-200 dark:border-zinc-700 rounded-xl p-4">
-                    <div className="flex items-center justify-between mb-3">
+                  <div className="bg-white dark:bg-zinc-800/40 border border-zinc-200 dark:border-zinc-700 rounded-xl">
+                    <div className="flex p-3 border-b border-zinc-200 dark:border-zinc-700 items-center justify-between mb-3">
                       <div className="flex items-center gap-2">
                         <Gauge size={18} className="text-purple-500" />
                         <h3 className="font-semibold text-sm text-zinc-900 dark:text-zinc-100">
                           Sensors in area
                         </h3>
                       </div>
-                      <span className="text-[11px] text-zinc-500">
+                      <span className="text-xs text-zinc-500">
                         {relatedSensors.length} sensors
                       </span>
                     </div>
 
                     {relatedSensors.length === 0 ? (
-                      <p className="text-xs text-zinc-500">
+                      <p className="flex justify-center items-center text-sm pb-6 pt-3 text-zinc-500">
                         No sensors found for this zone.
                       </p>
                     ) : (
-                      <div className="space-y-2 max-h-32 overflow-y-auto">
+                      <div className="space-y-2 p-3 max-h-32 overflow-y-auto">
                         {relatedSensors.map((sensor) => (
                           <div
                             key={sensor.id || sensor._id}
@@ -582,25 +651,25 @@ const Troubleshooting = () => {
                   </div>
 
                   {/* Plants */}
-                  <div className="bg-white dark:bg-zinc-800/40 border border-zinc-200 dark:border-zinc-700 rounded-xl p-4">
-                    <div className="flex items-center justify-between mb-3">
+                  <div className="bg-white dark:bg-zinc-800/40 border border-zinc-200 dark:border-zinc-700 rounded-xl">
+                    <div className="flex p-3 border-b border-zinc-200 dark:border-zinc-700 items-center justify-between">
                       <div className="flex items-center gap-2">
                         <Leaf size={18} className="text-green-600" />
                         <h3 className="font-semibold text-sm text-zinc-900 dark:text-zinc-100">
                           Affected plants
                         </h3>
                       </div>
-                      <span className="text-[11px] text-zinc-500">
+                      <span className="text-xs text-zinc-500">
                         {relatedPlants.length} plants
                       </span>
                     </div>
 
                     {relatedPlants.length === 0 ? (
-                      <p className="text-xs text-zinc-500">
+                      <p className="flex justify-center items-center text-sm pb-6 pt-3 text-zinc-500">
                         No plants matched for this alert.
                       </p>
                     ) : (
-                      <div className="space-y-2 overflow-y-auto">
+                      <div className="space-y-2 p-3 overflow-y-auto">
                         {relatedPlants.map((plant) => (
                           <div
                             key={plant.id || plant._id}

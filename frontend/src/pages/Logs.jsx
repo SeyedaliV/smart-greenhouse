@@ -100,17 +100,9 @@ const Logs = () => {
           <option value="PLANT_UPDATE">Plant update</option>
           <option value="PLANT_DELETE">Plant delete</option>
           <option value="ZONE_CREATE">Zone create</option>
-          <option value="ZONE_UPDATE">Zone update</option>
           <option value="ZONE_DELETE">Zone delete</option>
           <option value="SENSOR_CREATE">Sensor create</option>
-          <option value="SENSOR_UPDATE">Sensor update</option>
           <option value="SENSOR_DELETE">Sensor delete</option>
-          <option value="SENSOR_READING">Sensor reading</option>
-          <option value="SENSOR_CONNECTION">Sensor connection</option>
-          <option value="ALERT_RESOLVE">Alert resolve</option>
-          <option value="ALERT_ACK">Alert acknowledge</option>
-          <option value="SEED_RUN">Seed run</option>
-          <option value="SYSTEM_MAINTENANCE">System maintenance</option>
           <option value="LOGIN">Login</option>
         </select>
 
@@ -124,7 +116,6 @@ const Logs = () => {
           <option value="Plant">Plant</option>
           <option value="Zone">Zone</option>
           <option value="Sensor">Sensor</option>
-          <option value="Alert">Alert</option>
           <option value="System">System</option>
           <option value="AuditLog">AuditLog</option>
         </select>

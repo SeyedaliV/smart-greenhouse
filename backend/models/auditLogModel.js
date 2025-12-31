@@ -19,11 +19,9 @@ const auditLogSchema = new mongoose.Schema(
         'PLANT_UPDATE',
         'PLANT_DELETE',
         'ZONE_CREATE',
-        'ZONE_UPDATE',
         'ZONE_DELETE',
         // Sensor‑related actions
         'SENSOR_CREATE',
-        'SENSOR_UPDATE',
         'SENSOR_DELETE',
         'SENSOR_READING',
         'SENSOR_CONNECTION',

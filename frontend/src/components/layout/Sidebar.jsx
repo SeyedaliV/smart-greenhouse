@@ -4,7 +4,6 @@ import ThemeToggle from './ThemeToggle';
 import { 
   Home, 
   Leaf, 
-  Settings, 
   LogOut,
   LayoutGrid,
   AlertOctagon,
@@ -41,7 +40,7 @@ const Sidebar = () => {
       {/* User account */}
       <div className="flex w-16 h-16 justify-center px-4 py-3 border-b border-zinc-200 dark:border-zinc-700 flex-col items-center mb-3">
         <div className="w-10 h-10 bg-blue-500 text-white flex items-center justify-center rounded-full text-sm font-bold">
-          {user?.username?.charAt(0).toUpperCase() || 'U'}
+          {user?.username?.charAt(0).toUpperCase() || 'A'}
         </div>
         {/* <div className="text-xs text-zinc-500 text-center hidden lg:block">
           {user?.username}

@@ -152,18 +152,18 @@ const ZoneForm = ({ onClose, onSave }) => {
         {/* Fixed Footer: Summary + Buttons */}
         <div className="border-t border-zinc-200 dark:border-zinc-700 px-6 py-4 shrink-0">
           {/* Minimal Summary */}
-          <div className="mb-4 p-4 border border-zinc-300 bg-zinc-50 dark:bg-zinc-700/50 rounded-lg">
+          <div className="mb-4 p-4 border dark:border-zinc-600 border-zinc-300 bg-zinc-50 dark:bg-zinc-700/50 rounded-lg">
             <h4 className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 mb-2">
               Summary
             </h4>
             <div className="space-y-1 text-sm">
               <div className="flex justify-between">
                 <span className="text-zinc-600 dark:text-zinc-400">Zone Name</span>
-                <span className="font-medium text-zinc-700">Zone {nextZoneLetter}</span>
+                <span className="font-medium text-zinc-700 dark:text-zinc-300">Zone {nextZoneLetter}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-zinc-600 dark:text-zinc-400">Plant Type</span>
-                <span className="font-medium flex items-center text-zinc-700 gap-2">
+                <span className="font-medium flex items-center text-zinc-700 dark:text-zinc-300 gap-2">
                   {selectedPlant?.emoji} {selectedPlant?.label}
                 </span>
               </div>

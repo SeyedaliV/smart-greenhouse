@@ -50,15 +50,6 @@ const Dashboard = () => {
     }
   };
 
-  const handleResolveAlert = (index) => {
-    setAlerts((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  const handleAcknowledgeAlert = (index) => {
-    // برای سادگی فعلاً مانند resolve عمل می‌کند،
-    // اما می‌توان آن را برای آینده گسترش داد (مثل بازگشت بعد از رفرش).
-    setAlerts((prev) => prev.filter((_, i) => i !== index));
-  };
 
   // حالت لودینگ
   if (loading) {
@@ -163,10 +154,8 @@ const Dashboard = () => {
           <AlertBanner plants={plants} />
         </div> */}
         <div>
-          <AlertsCard 
-            alerts={alerts} 
-            onResolve={handleResolveAlert}
-            onAcknowledge={handleAcknowledgeAlert}
+          <AlertsCard
+            alerts={alerts}
           />
         </div>
       </div>

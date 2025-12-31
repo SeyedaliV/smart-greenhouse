@@ -248,7 +248,7 @@ const AddSensorForm = ({ zone, plants, onClose, onSuccess }) => {
                     onClick={handleGenerateMAC}
                     className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 flex items-center"
                   >
-                    <Cpu size={12} className="ml-1" />
+                    <Cpu size={12} className="mr-1" />
                     Generate Random
                   </button>
                 </div>
@@ -276,7 +276,7 @@ const AddSensorForm = ({ zone, plants, onClose, onSuccess }) => {
                     onClick={handleGenerateIP}
                     className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 flex items-center"
                   >
-                    <Globe size={12} className="ml-1" />
+                    <Globe size={12} className="mr-1" />
                     Generate Random
                   </button>
                 </div>
