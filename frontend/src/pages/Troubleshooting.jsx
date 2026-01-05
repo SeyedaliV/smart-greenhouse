@@ -279,30 +279,31 @@ const Troubleshooting = () => {
         </div>
 
         <div className="flex flex-col items-end gap-1 text-right">
+          <div className='flex items-center gap-3'>
+          <button
+              onClick={() => navigate('/logs')}
+              className="inline-flex items-center px-3 py-1 bg-white dark:bg-zinc-800 rounded border border-zinc-200 dark:border-zinc-700 text-xs text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800/40"
+            >
+              <Activity size={14} className="mr-1" />
+              View full log
+          </button>
           <span className="text-xs uppercase tracking-wide text-zinc-400">
             Active alerts
           </span>
+          </div>
           <div className="flex items-center gap-2">
             <Activity size={16} className="text-red-500" />
             <span className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
               {alerts.length}
             </span>
           </div>
-
-          <button
-            onClick={() => navigate('/logs')}
-            className="mt-1 inline-flex items-center px-3 py-1 rounded border border-zinc-200 dark:border-zinc-700 text-xs text-zinc-600 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-800"
-          >
-            <Activity size={14} className="mr-1" />
-            View full log
-          </button>
         </div>
       </div>
 
       {/* Main layout */}
       <div className="flex gap-3">
         {/* Alerts list */}
-        <div className="lg:col-span-1 w-1/2">
+        <div className="lg:col-span-1 w-1/2 max-h-[calc(100vh)] overflow-y-auto">
           <div className="bg-white dark:bg-zinc-800/40 border border-zinc-200 dark:border-zinc-700 rounded-xl overflow-hidden h-full flex flex-col">
             <div className="px-4 py-3 border-b border-zinc-200 dark:border-zinc-700 flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -429,7 +430,7 @@ const Troubleshooting = () => {
                 </div>
               </div>
 
-              Context: Zone & environment
+              {/* Context: Zone & environment
               {relatedZone && (
                 <div className="bg-white dark:bg-zinc-800/40 border border-zinc-200 dark:border-zinc-700 rounded-xl p-3">
                   <div className="flex items-center justify-between mb-3">
@@ -494,7 +495,7 @@ const Troubleshooting = () => {
                     </div>
                   </div>
                 </div>
-              )}
+              )} */}
 
               {/* IoT control panel */}
               <div className="grid gap-3">

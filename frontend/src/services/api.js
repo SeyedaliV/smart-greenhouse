@@ -60,22 +60,13 @@ export const zonesService = {
   getZonePlants: (id) => api.get(`/zones/${id}/plants`),
   create: (zoneData) => api.post('/zones', zoneData),
   delete: (zoneId) => api.delete(`/zones/${zoneId}`),
-  completeSeed: () => api.post('/zones/complete-seed'),
 };
 
 export const sensorsService = {
   getAll: () => api.get('/sensors').then(res => res.data),
   getOne: (id) => api.get(`/sensors/${id}`),
   delete: (id) => api.delete(`/sensors/${id}`).then(res => res.data),
-  create: (sensorData) => api.post('/sensors', sensorData),
-  updateValue: (id, value) => api.patch(`/sensors/${id}/value`, { value }),
-  simulateReading: (id) => api.post(`/sensors/${id}/simulate`),
-  simulateConnection: (id) => api.post(`/sensors/${id}/connect`),
-  getMetrics: (id) => api.get(`/sensors/${id}/metrics`),
-  getPlantSensors: (plantId) => api.get(`/sensors/plant/${plantId}`),
-  getZoneSensors: (zoneId) => api.get(`/sensors/zone/${zoneId}/public`),
-  startSimulation: () => api.post('/sensors/simulation/start'),
-  stopSimulation: () => api.post('/sensors/simulation/stop')
+  create: (sensorData) => api.post('/sensors', sensorData)
 };
 
 export const logsService = {

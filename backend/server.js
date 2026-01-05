@@ -9,7 +9,6 @@ import plantRoutes from './routes/plantRoutes.js';
 import sensorRoutes from './routes/sensorRoutes.js';
 import deviceRoutes from './routes/deviceRoutes.js';
 import zoneRoutes from './routes/zoneRoutes.js';
-import seedRoutes from './routes/seedRoutes.js';
 import dashboardRoutes from './routes/dashboardRoutes.js';
 import auditLogRoutes from './routes/auditLogRoutes.js';
 import automationRoutes from './routes/automationRoutes.js';
@@ -33,7 +32,6 @@ app.use('/api/sensors', sensorRoutes);
 app.use('/api/devices', deviceRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/zones', zoneRoutes);
-app.use('/api/seed', seedRoutes);
 app.use('/api/logs', auditLogRoutes);
 app.use('/api/automation', automationRoutes);
 

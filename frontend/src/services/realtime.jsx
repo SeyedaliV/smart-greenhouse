@@ -51,7 +51,7 @@ const showToast = ({
     ),
     {
       id,
-      duration: Infinity,
+      duration: 5000,
     },
   );
 };

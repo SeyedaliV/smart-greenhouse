@@ -1,5 +1,5 @@
 // components/dashboard/AlertsCard.jsx
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AlertTriangle, AlertCircle, Info, ArrowRight } from 'lucide-react';
 
 const AlertsCard = ({ alerts }) => {
@@ -124,11 +124,11 @@ const AlertsCard = ({ alerts }) => {
       </div>
 
       {alerts.length > 5 && (
-        <div className="mt-4 pt-4 sticky border-t border-zinc-200 dark:border-zinc-700">
-          <button className="flex items-center space-x-1 text-sm text-blue-600 dark:text-blue-500 hover:text-blue-800 dark:hover:text-blue-400 font-medium">
+        <div className="mt-4 px-6 py-3 sticky border-t border-zinc-200 dark:border-zinc-700">
+          <Link to="/troubleshooting" className="flex items-center space-x-1 text-sm text-blue-600 dark:text-blue-500 hover:text-blue-800 dark:hover:text-blue-400 font-medium">
             <span>View all {alerts.length} alerts</span>
             <ArrowRight size={16} />
-          </button>
+          </Link>
         </div>
       )}
     </div>
